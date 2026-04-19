@@ -1,70 +1,96 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback, memo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ExplodedProductCanvas from "@/components/ExplodedProductCanvas";
 import ColorConfigurator from "@/components/ColorConfigurator";
 import ImageGallery from "@/components/ImageGallery";
+import CinematicIntro from "@/components/CinematicIntro";
+import InteractiveHotspots from "@/components/InteractiveHotspots";
+import PerformanceSpecs from "@/components/PerformanceSpecs";
+import Navbar from "@/components/Navbar";
+import DayNightToggle from "@/components/DayNightToggle";
 
+/* ──────────────────────────────────────────────────────────
+   SCROLL SECTIONS – storytelling text overlays
+   ────────────────────────────────────────────────────────── */
 const sections = [
   {
     title: "Continental GT 650",
-    subtitle: "Pure Retro Machine",
-    alignment: "center",
+    subtitle: "The Legend of the Café Racer",
+    alignment: "center" as const,
     scroll: [0, 0.2],
   },
   {
     title: "Engineered Precision",
     subtitle: "Every component polished to perfection",
-    alignment: "left",
-    scroll: [0.3, 0.5],
+    alignment: "left" as const,
+    scroll: [0.25, 0.45],
   },
   {
-    title: "Internal Architecture",
-    subtitle: "Exploring the heart of the machine",
-    alignment: "right",
-    scroll: [0.6, 0.8],
+    title: "648cc Parallel Twin",
+    subtitle: "Air-oil cooled • 47 HP • 270° firing order",
+    alignment: "right" as const,
+    scroll: [0.5, 0.7],
   },
   {
     title: "Built to Perfection",
     subtitle: "Order your slice of heritage",
-    alignment: "center",
-    scroll: [0.85, 1],
+    alignment: "center" as const,
+    scroll: [0.8, 1],
   },
 ];
 
-const TextSection = ({ title, subtitle, alignment, range }: any) => {
+/* ──────────────────────────────────────────────────────────
+   TEXT SECTION with scroll-driven opacity/parallax
+   ────────────────────────────────────────────────────────── */
+const TextSection = ({ title, subtitle, alignment, range }: {
+  title: string;
+  subtitle: string;
+  alignment: "left" | "center" | "right";
+  range: number[];
+}) => {
   const { scrollYProgress } = useScroll();
 
   const opacity = useTransform(
     scrollYProgress,
-    [range[0], range[0] + 0.05, range[1] - 0.05, range[1]],
+    [range[0], range[0] + 0.04, range[1] - 0.04, range[1]],
     [0, 1, 1, 0]
   );
 
   const y = useTransform(
     scrollYProgress,
-    [range[0], range[0] + 0.05, range[1] - 0.05, range[1]],
-    [30, 0, 0, -30]
+    [range[0], range[0] + 0.04, range[1] - 0.04, range[1]],
+    [40, 0, 0, -40]
+  );
+
+  const scale = useTransform(
+    scrollYProgress,
+    [range[0], range[0] + 0.04, range[1] - 0.04, range[1]],
+    [0.97, 1, 1, 0.97]
   );
 
   const alignmentClasses = {
-    left: "items-start text-left pl-12 md:pl-32",
+    left: "items-start text-left pl-8 md:pl-24 lg:pl-32",
     center: "items-center text-center",
-    right: "items-end text-right pr-12 md:pr-32",
+    right: "items-end text-right pr-8 md:pr-24 lg:pr-32",
   };
 
   return (
     <motion.div
-      style={{ opacity, y }}
-      className={`fixed inset-0 flex flex-col justify-center pointer-events-none z-10 px-6 md:px-0 ${alignmentClasses[alignment as keyof typeof alignmentClasses]}`}
+      style={{ opacity, y, scale }}
+      className={`fixed inset-0 flex flex-col justify-center pointer-events-none z-10 px-6 md:px-0 ${alignmentClasses[alignment]}`}
     >
       <div className="max-w-4xl">
-        <h2 className="text-5xl md:text-9xl font-bold tracking-tighter text-white/95 uppercase mb-6 leading-none">
+        <motion.div className="flex items-center gap-3 mb-6">
+          <div className={`h-px w-8 bg-[#c8a96e]/30 ${alignment === 'right' ? 'ml-auto' : alignment === 'center' ? 'mx-auto' : ''}`} />
+        </motion.div>
+        <h2 className="text-3xl md:text-7xl lg:text-9xl font-black tracking-[-0.04em] text-white/95 uppercase mb-4 md:mb-6 leading-[0.9]">
           {title}
         </h2>
-        <div className={`h-[2px] w-24 bg-white/30 mb-8 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto' : ''}`} />
-        <p className="text-[10px] md:text-sm font-mono uppercase tracking-[0.5em] text-white/50 leading-loose">
+        <div className={`h-[1px] w-16 md:w-20 bg-gradient-to-r from-[#c8a96e]/30 to-transparent mb-4 md:mb-6 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto bg-gradient-to-l' : ''
+          }`} />
+        <p className="text-[8px] md:text-[10px] font-mono uppercase tracking-[0.4em] md:tracking-[0.6em] text-white/35 leading-loose">
           {subtitle}
         </p>
       </div>
@@ -72,11 +98,29 @@ const TextSection = ({ title, subtitle, alignment, range }: any) => {
   );
 };
 
+/* ──────────────────────────────────────────────────────────
+   HOME PAGE
+   ────────────────────────────────────────────────────────── */
 export default function Home() {
+  const [introComplete, setIntroComplete] = useState(false);
+
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true);
+  }, []);
+
   return (
-    <main className="relative bg-[#050505]">
-      {/* Scrollable Container */}
-      <div className="relative h-[400vh]">
+    <main className="relative bg-[#050505] noise-overlay">
+      {/* Cinematic Intro */}
+      <CinematicIntro onComplete={handleIntroComplete} />
+
+      {/* Navigation */}
+      {introComplete && <Navbar />}
+
+      {/* Day/Night Toggle */}
+      {introComplete && <DayNightToggle />}
+
+      {/* ═══ SECTION 1: HERO — Scroll-driven Storytelling ═══ */}
+      <div id="hero" className="relative h-[500vh]">
         {/* Sticky Canvas Background */}
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           <ExplodedProductCanvas frameCount={300} basePath="/images/sequence" />
@@ -92,43 +136,113 @@ export default function Home() {
             />
           ))}
 
-          {/* Branding UI */}
-          <div className="fixed top-12 left-12 z-20 pointer-events-none">
-            <span className="text-[10px] font-mono tracking-[0.7em] text-white/40 uppercase">GT650 / Heritage</span>
+          {/* Top-left Branding */}
+          <div className="fixed top-14 md:top-16 left-6 md:left-12 z-20 pointer-events-none">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-1 h-1 rounded-full bg-[#c8a96e]/40" />
+              <span className="text-[7px] md:text-[8px] font-mono tracking-[0.5em] md:tracking-[0.7em] text-white/25 uppercase">
+                GT650 / Heritage
+              </span>
+            </div>
           </div>
 
-          {/* Scroll Progress Indicator */}
-          <div className="fixed bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4">
+          {/* Scroll Indicator */}
+          <motion.div
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: introComplete ? 1 : 0 }}
+            transition={{ delay: 1, duration: 1 }}
+          >
             <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="w-px h-16 bg-gradient-to-b from-white/40 to-transparent"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"
             />
-            <span className="text-[9px] font-mono tracking-[0.4em] text-white/30 uppercase">Scroll</span>
-          </div>
+            <span className="text-[7px] font-mono tracking-[0.5em] text-white/20 uppercase">
+              Scroll to explore
+            </span>
+          </motion.div>
         </div>
       </div>
 
-      {/* 3D Color Configurator Section */}
+      {/* ═══ SECTION 2: INTERACTIVE HOTSPOTS ═══ */}
+      <section className="relative z-20">
+        <InteractiveHotspots />
+      </section>
+
+      {/* ═══ SECTION 3: PERFORMANCE SPECS ═══ */}
+      <section className="relative z-20">
+        <PerformanceSpecs />
+      </section>
+
+      {/* ═══ SECTION 4: COLOR CONFIGURATOR ═══ */}
       <section className="relative z-20">
         <ColorConfigurator />
       </section>
 
-      {/* Image Gallery Section */}
+      {/* ═══ SECTION 5: IMAGE GALLERY ═══ */}
       <section className="relative z-20">
         <ImageGallery />
       </section>
 
-      {/* CTA Footer */}
-      <section className="relative z-20 h-screen bg-[#050505] flex flex-col items-center justify-center border-t border-white/5">
-        <h3 className="text-3xl md:text-5xl font-light text-white/80 tracking-tight text-center max-w-2xl px-6 leading-tight">
-          Crafting the future, <br /> informed by the past.
-        </h3>
-        <button className="mt-16 group relative px-10 py-4 overflow-hidden">
-          <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.4em] text-white">Own the Legend</span>
-          <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-          <div className="absolute inset-0 border border-white/20" />
-        </button>
+      {/* ═══ SECTION 6: CTA FOOTER ═══ */}
+      <section className="relative z-20 h-screen bg-[#050505] flex flex-col items-center justify-center overflow-hidden">
+        {/* Divider */}
+        <div className="section-divider absolute top-0 left-0 right-0" />
+
+        {/* Background watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
+          <span className="text-[30vw] font-black uppercase tracking-[-0.04em] text-white">
+            RE
+          </span>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="flex flex-col items-center gap-8 relative z-10"
+        >
+          <div className="flex items-center gap-4 mb-2">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#c8a96e]/20" />
+            <span className="text-[7px] font-mono uppercase tracking-[0.8em] text-[#c8a96e]/30">
+              Est. 1901
+            </span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#c8a96e]/20" />
+          </div>
+
+          <h3 className="text-2xl md:text-6xl font-extralight text-white/80 tracking-[-0.02em] text-center max-w-3xl px-6 leading-[1.15]">
+            Crafting the future,
+            <br />
+            <span className="text-white/30">informed by the past.</span>
+          </h3>
+
+          <div className="h-px w-20 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          <motion.a
+            href="#configurator"
+            className="btn-premium mt-8"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="relative z-10">Own the Legend</span>
+          </motion.a>
+
+          <p className="text-[7px] font-mono uppercase tracking-[0.5em] text-white/12 mt-4">
+            Starting from ₹3,13,600
+          </p>
+        </motion.div>
+
+        {/* Bottom copyright */}
+        <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-8 md:px-12">
+          <span className="text-[7px] font-mono uppercase tracking-[0.4em] text-white/10">
+            © 2026 Royal Enfield
+          </span>
+          <span className="text-[7px] font-mono uppercase tracking-[0.4em] text-white/10">
+            Continental GT 650
+          </span>
+        </div>
       </section>
     </main>
   );

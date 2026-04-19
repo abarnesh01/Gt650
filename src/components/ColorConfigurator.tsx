@@ -1,58 +1,63 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ──────────────────────────────────────────────────────────
-   COLOR VARIANTS – each maps to a real product photograph
+   COLOR VARIANTS – each maps to a real high-res product photograph
    ────────────────────────────────────────────────────────── */
 const COLORS = [
     {
         name: "British Racing Green",
         hex: "#1a3b2a",
         id: "green",
-        src: "/images/gt650_side_green_1776494688684.png",
+        src: "/images/british_racing_green.webp",
         accent: "#2d6b47",
         spec: "Classic Heritage",
+        description: "The definitive café racer hue. Rich British Racing Green with gold coach-lining, heritage badge.",
     },
     {
         name: "Rocker Red",
         hex: "#b01c1c",
         id: "red",
-        src: "/images/gt650_side_red_1776494705062.png",
+        src: "/images/rocker_red.webp",
         accent: "#e63946",
         spec: "Sports Café",
+        description: "Bold, visceral and unapologetic. Race-inspired red with chrome tank rails.",
     },
     {
         name: "Ventura Storm",
         hex: "#1b3b5a",
         id: "blue",
-        src: "/images/gt650_side_blue_1776494722709.png",
+        src: "/images/ventura_storm.webp",
         accent: "#457b9d",
         spec: "Midnight Tourer",
+        description: "Deep oceanic blue with a metallic flake finish. Enigmatic and refined.",
     },
     {
         name: "Dux Deluxe",
         hex: "#1c1c1c",
         id: "black",
-        src: "/images/gt650_side_black_1776494740154.png",
+        src: "/images/dux_deluxe.webp",
         accent: "#3a3a3a",
         spec: "Stealth Edition",
+        description: "Blacked-out sophistication. Piano black with subtle chrome accents.",
     },
     {
         name: "Mr Clean",
         hex: "#c0c0c0",
         id: "chrome",
-        src: "/images/gt650_side_chrome_1776494757358.png",
+        src: "/images/mister_clean.webp",
         accent: "#d4d4d4",
         spec: "Chrome Signature",
+        description: "Full chrome brilliance. Mirror-finish tank with heritage pinstriping.",
     },
 ] as const;
 
 type ColorVariant = (typeof COLORS)[number];
 
 /* ──────────────────────────────────────────────────────────
-   IMAGE PRELOADER – loads all textures before any render
+   IMAGE PRELOADER
    ────────────────────────────────────────────────────────── */
 function usePreloadImages(colors: readonly ColorVariant[]) {
     const [images, setImages] = useState<Map<string, HTMLImageElement>>(new Map());
@@ -114,16 +119,14 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
     const prevIdRef = useRef<string>(activeId);
     const animRef = useRef<number>(0);
 
-    // Transition state
     const transitionRef = useRef({
         fromId: activeId,
         toId: activeId,
-        progress: 1, // 1 = fully showing 'toId'
+        progress: 1,
         active: false,
         scale: 1,
     });
 
-    // Draw a single image on canvas with object-fit: contain & optional scale
     const drawImage = useCallback(
         (ctx: CanvasRenderingContext2D, img: HTMLImageElement, w: number, h: number, alpha: number, scale: number) => {
             if (alpha <= 0.001) return;
@@ -135,19 +138,23 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
 
             let drawW: number, drawH: number;
             if (imgRatio > canvasRatio) {
-                drawW = w * 0.85;
+                drawW = w * 0.82;
                 drawH = drawW / imgRatio;
             } else {
-                drawH = h * 0.85;
+                drawH = h * 0.82;
                 drawW = drawH * imgRatio;
             }
 
-            // Apply scale from center
             drawW *= scale;
             drawH *= scale;
 
             const x = (w - drawW) / 2;
             const y = (h - drawH) / 2;
+
+            // Soft shadow beneath bike
+            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+            ctx.shadowBlur = 60;
+            ctx.shadowOffsetY = 20;
 
             ctx.drawImage(img, x, y, drawW, drawH);
             ctx.restore();
@@ -155,10 +162,8 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
         []
     );
 
-    // Easing function – smooth ease-in-out
     const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-    // Animation loop
     const animate = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -166,7 +171,6 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const dpr = window.devicePixelRatio || 1;
         const w = canvas.width;
         const h = canvas.height;
 
@@ -175,22 +179,18 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
         const t = transitionRef.current;
 
         if (t.active) {
-            // Advance progress
-            t.progress = Math.min(t.progress + 0.018, 1); // ~0.6s at 60fps
+            t.progress = Math.min(t.progress + 0.016, 1); // ~0.6s at 60fps
             const easedProgress = easeInOutCubic(t.progress);
 
-            // Scale pulse: slightly zoom in during transition, then settle
-            t.scale = 1 + 0.03 * Math.sin(easedProgress * Math.PI);
+            t.scale = 1 + 0.025 * Math.sin(easedProgress * Math.PI);
 
             const fromImg = images.get(t.fromId);
             const toImg = images.get(t.toId);
 
-            // Draw outgoing image (fading out)
             if (fromImg) {
                 drawImage(ctx, fromImg, w, h, 1 - easedProgress, t.scale);
             }
 
-            // Draw incoming image (fading in)
             if (toImg) {
                 drawImage(ctx, toImg, w, h, easedProgress, t.scale);
             }
@@ -200,7 +200,6 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
                 t.scale = 1;
             }
         } else {
-            // Static: just draw the current image
             const img = images.get(t.toId);
             if (img) {
                 drawImage(ctx, img, w, h, 1, 1);
@@ -210,14 +209,12 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
         animRef.current = requestAnimationFrame(animate);
     }, [images, drawImage]);
 
-    // Start animation loop
     useEffect(() => {
         if (!loaded) return;
         animRef.current = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(animRef.current);
     }, [loaded, animate]);
 
-    // Trigger transition when activeId changes
     useEffect(() => {
         if (prevIdRef.current !== activeId) {
             transitionRef.current = {
@@ -231,7 +228,6 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
         }
     }, [activeId]);
 
-    // Handle resize
     useEffect(() => {
         const handleResize = () => {
             const canvas = canvasRef.current;
@@ -256,7 +252,7 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
 }
 
 /* ──────────────────────────────────────────────────────────
-   COLOR SWATCH BUTTON
+   PREMIUM COLOR SWATCH
    ────────────────────────────────────────────────────────── */
 interface SwatchProps {
     color: ColorVariant;
@@ -274,53 +270,110 @@ function ColorSwatch({ color, isActive, onClick, index }: SwatchProps) {
         >
             {/* Outer glow ring */}
             <motion.div
-                className="absolute inset-[-6px] rounded-full"
+                className="absolute inset-[-7px] rounded-full"
                 animate={{
                     opacity: isActive ? 1 : 0,
-                    scale: isActive ? 1 : 0.8,
+                    scale: isActive ? 1 : 0.7,
                 }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 style={{
-                    border: `1.5px solid ${color.accent}50`,
-                    boxShadow: isActive ? `0 0 20px ${color.hex}40, 0 0 60px ${color.hex}15` : "none",
+                    border: `1.5px solid ${color.accent}60`,
+                    boxShadow: isActive
+                        ? `0 0 24px ${color.hex}50, 0 0 60px ${color.hex}20`
+                        : "none",
                 }}
             />
 
             {/* Swatch dot */}
             <motion.div
                 animate={{
-                    scale: isActive ? 1.35 : 1,
-                    backgroundColor: color.hex,
+                    scale: isActive ? 1.4 : 1,
                 }}
-                whileHover={{ scale: isActive ? 1.35 : 1.15 }}
+                whileHover={{ scale: isActive ? 1.4 : 1.2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="relative w-9 h-9 rounded-full shadow-lg cursor-pointer"
+                className="relative w-10 h-10 rounded-full shadow-lg cursor-pointer"
                 style={{
-                    background: `radial-gradient(circle at 35% 35%, ${color.accent}, ${color.hex})`,
+                    background: `radial-gradient(circle at 35% 30%, ${color.accent}ee, ${color.hex})`,
                     boxShadow: isActive
-                        ? `0 4px 20px ${color.hex}60, inset 0 1px 2px rgba(255,255,255,0.2)`
-                        : `0 2px 8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)`,
-                    border: `1px solid ${isActive ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)"}`,
+                        ? `0 4px 24px ${color.hex}60, inset 0 2px 4px rgba(255,255,255,0.15)`
+                        : `0 2px 8px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.08)`,
+                    border: `1.5px solid ${isActive ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.06)"}`,
                 }}
             >
                 {/* Inner highlight */}
                 <div
-                    className="absolute top-[3px] left-[6px] w-3 h-1.5 rounded-full opacity-40"
-                    style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.5), transparent)" }}
+                    className="absolute top-[3px] left-[6px] w-3.5 h-2 rounded-full opacity-30"
+                    style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.6), transparent)" }}
                 />
             </motion.div>
 
-            {/* Tooltip on hover */}
-            <div className="absolute -top-16 opacity-0 group-hover:opacity-100 transition-all duration-400 pointer-events-none transform translate-y-2 group-hover:translate-y-0">
+            {/* Tooltip */}
+            <div className="absolute -top-16 opacity-0 group-hover:opacity-100 transition-all duration-400 pointer-events-none transform translate-y-2 group-hover:translate-y-0 z-50">
                 <div className="relative">
-                    <span className="text-[7px] font-mono text-white/90 tracking-[0.35em] uppercase whitespace-nowrap bg-white/[0.06] backdrop-blur-2xl px-4 py-2 rounded-sm border border-white/10 block">
+                    <span className="text-[7px] font-mono text-white/90 tracking-[0.35em] uppercase whitespace-nowrap bg-black/80 backdrop-blur-2xl px-4 py-2.5 rounded-sm border border-white/10 block shadow-xl">
                         {color.name}
                     </span>
-                    {/* Arrow */}
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white/[0.06] border-r border-b border-white/10 rotate-45" />
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-black/80 border-r border-b border-white/10 rotate-45" />
                 </div>
             </div>
         </button>
+    );
+}
+
+/* ──────────────────────────────────────────────────────────
+   SPECIFICATIONS PANEL
+   ────────────────────────────────────────────────────────── */
+function SpecsPanel({ color }: { color: ColorVariant }) {
+    const specs = [
+        { label: "Engine", value: "648cc Parallel Twin" },
+        { label: "Power", value: "47 HP @ 7250 RPM" },
+        { label: "Torque", value: "52 Nm @ 5250 RPM" },
+        { label: "Weight", value: "202 kg" },
+    ];
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-8 md:right-16 top-1/2 -translate-y-1/2 z-10 pointer-events-none hidden lg:block"
+        >
+            <div className="glass-premium rounded-sm p-6 w-56">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={color.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.4 }}
+                    >
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color.hex }} />
+                            <span className="text-[8px] font-mono uppercase tracking-[0.4em] text-white/40">
+                                {color.spec}
+                            </span>
+                        </div>
+
+                        <p className="text-[10px] leading-relaxed text-white/30 mb-6">
+                            {color.description}
+                        </p>
+
+                        <div className="space-y-3">
+                            {specs.map((s) => (
+                                <div key={s.label} className="flex justify-between items-baseline">
+                                    <span className="text-[8px] font-mono uppercase tracking-[0.3em] text-white/25">
+                                        {s.label}
+                                    </span>
+                                    <span className="text-[9px] font-mono text-white/60">
+                                        {s.value}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        </motion.div>
     );
 }
 
@@ -352,51 +405,63 @@ export default function ColorConfigurator() {
     return (
         <section
             ref={sectionRef}
+            id="configurator"
             className="relative h-screen w-full bg-[#050505] flex flex-col items-center justify-center overflow-hidden"
         >
-            {/* Ambient background glow matching selected color */}
+            {/* Ambient background glow */}
             <motion.div
                 className="absolute inset-0 pointer-events-none"
                 animate={{
-                    background: `radial-gradient(ellipse 80% 50% at 50% 60%, ${activeColor.hex}08 0%, transparent 70%)`,
+                    background: `radial-gradient(ellipse 90% 60% at 50% 55%, ${activeColor.hex}0a 0%, transparent 65%)`,
                 }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
             />
 
-            {/* Luxury watermark */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.025] select-none">
-                <h1 className="text-[28vw] font-black uppercase tracking-tighter text-white">
+            {/* Reflective floor gradient */}
+            <div
+                className="absolute bottom-0 left-0 right-0 h-[35%] pointer-events-none"
+                style={{
+                    background: "linear-gradient(to top, rgba(255,255,255,0.015) 0%, transparent 100%)",
+                }}
+            />
+
+            {/* Watermark */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02] select-none">
+                <h1 className="text-[28vw] font-black uppercase tracking-[-0.05em] text-white leading-none">
                     GT 650
                 </h1>
             </div>
 
             {/* Header */}
-            <div className="absolute top-[15%] left-1/2 -translate-x-1/2 text-center z-10 pointer-events-none w-full px-4">
+            <div className="absolute top-[12%] md:top-[14%] left-1/2 -translate-x-1/2 text-center z-10 pointer-events-none w-full px-4">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                     viewport={{ once: true }}
                 >
-                    <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-white/95 uppercase mb-3">
+                    <span className="text-[8px] md:text-[9px] font-mono uppercase tracking-[0.8em] text-white/20 block mb-4">
+                        Color Configurator
+                    </span>
+                    <h2 className="text-4xl md:text-8xl font-black tracking-[-0.04em] text-white/95 uppercase mb-3 leading-none">
                         Signature
                     </h2>
-                    <div className="h-px w-16 bg-white/20 mx-auto my-6" />
-                    <p className="max-w-md mx-auto text-[9px] md:text-xs font-mono uppercase tracking-[0.6em] text-white/30 leading-relaxed">
-                        Real finishes. Zero simulation. Studio perfected.
+                    <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto my-5" />
+                    <p className="max-w-md mx-auto text-[8px] md:text-[10px] font-mono uppercase tracking-[0.6em] text-white/25 leading-loose">
+                        Real finishes · Studio perfected · Zero simulation
                     </p>
                 </motion.div>
             </div>
 
-            {/* ─── Main Display Area ─── */}
+            {/* Main Display */}
             <div className="relative w-full h-full flex items-center justify-center">
-                {/* Loading screen */}
+                {/* Loading */}
                 <AnimatePresence>
                     {!loaded && (
                         <motion.div
                             initial={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.8 }}
+                            transition={{ duration: 1 }}
                             className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#050505]"
                         >
                             <div className="relative w-56 h-px bg-white/10 overflow-hidden rounded-full">
@@ -406,39 +471,42 @@ export default function ColorConfigurator() {
                                     transition={{ duration: 0.3 }}
                                 />
                             </div>
-                            <p className="mt-6 text-[9px] font-mono uppercase tracking-[0.6em] text-white/30">
-                                Loading Variants · {progress}%
+                            <p className="mt-6 text-[8px] font-mono uppercase tracking-[0.7em] text-white/25">
+                                Loading Finishes · {progress}%
                             </p>
                         </motion.div>
                     )}
                 </AnimatePresence>
 
-                {/* Crossfade Canvas */}
+                {/* Canvas */}
                 {loaded && (
                     <motion.div
                         className="absolute inset-0"
-                        initial={{ opacity: 0, scale: 1.05 }}
+                        initial={{ opacity: 0, scale: 1.08 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                     >
                         <CrossfadeCanvas images={images} activeId={activeColor.id} loaded={loaded} />
                     </motion.div>
                 )}
 
-                {/* Subtle vignette overlay */}
+                {/* Vignette */}
                 <div
                     className="absolute inset-0 pointer-events-none z-10"
                     style={{
                         background:
-                            "radial-gradient(ellipse at center, transparent 50%, rgba(5,5,5,0.6) 100%)",
+                            "radial-gradient(ellipse at center, transparent 45%, rgba(5,5,5,0.7) 100%)",
                     }}
                 />
             </div>
 
-            {/* ─── Bottom Control Bar ─── */}
-            <div className="absolute bottom-10 md:bottom-14 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-8">
-                {/* Swatch Row */}
-                <div className="flex items-center gap-7 md:gap-9 p-3 rounded-full bg-white/[0.02] backdrop-blur-sm border border-white/[0.04]">
+            {/* Specs Panel */}
+            <SpecsPanel color={activeColor} />
+
+            {/* Bottom Control Bar */}
+            <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-7">
+                {/* Swatches */}
+                <div className="flex items-center gap-6 md:gap-8 p-3.5 rounded-full glass-premium">
                     {COLORS.map((color, idx) => (
                         <ColorSwatch
                             key={color.id}
@@ -455,24 +523,24 @@ export default function ColorConfigurator() {
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeColor.id}
-                            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+                            initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                            exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+                            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                             className="flex flex-col items-center gap-1.5"
                         >
                             <h3 className="text-[11px] md:text-sm font-mono uppercase tracking-[0.7em] text-white/90">
                                 {activeColor.name}
                             </h3>
-                            <span className="text-[8px] font-mono uppercase tracking-[0.5em] text-white/25">
+                            <span className="text-[7px] font-mono uppercase tracking-[0.5em] text-white/20">
                                 {activeColor.spec}
                             </span>
                         </motion.div>
                     </AnimatePresence>
-                    <div className="h-px w-28 bg-gradient-to-r from-transparent via-white/15 to-transparent mt-1" />
+                    <div className="h-px w-28 bg-gradient-to-r from-transparent via-white/12 to-transparent mt-1" />
 
-                    {/* Keyboard hint */}
-                    <p className="text-[7px] font-mono uppercase tracking-[0.4em] text-white/15 mt-1 hidden md:block">
+                    {/* Key hint */}
+                    <p className="text-[7px] font-mono uppercase tracking-[0.4em] text-white/12 mt-0.5 hidden md:block">
                         ← → Arrow keys to browse
                     </p>
                 </div>
@@ -481,7 +549,11 @@ export default function ColorConfigurator() {
             {/* Corner branding */}
             <div className="absolute top-8 right-8 z-10 pointer-events-none hidden md:block">
                 <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: activeColor.hex }} />
+                    <motion.div
+                        className="w-2 h-2 rounded-full"
+                        animate={{ backgroundColor: activeColor.hex }}
+                        transition={{ duration: 0.5 }}
+                    />
                     <span className="text-[8px] font-mono uppercase tracking-[0.4em] text-white/20">
                         {activeColor.id.toUpperCase()}
                     </span>
