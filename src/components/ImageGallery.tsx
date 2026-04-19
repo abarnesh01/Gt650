@@ -11,7 +11,7 @@ const GALLERY_IMAGES = [
         title: "Heritage Profile",
         subtitle: "British Racing Green",
         aspect: "aspect-video",
-        span: "md:col-span-2",
+        span: "sm:col-span-2",
     },
     {
         id: 2,
@@ -43,7 +43,7 @@ const GALLERY_IMAGES = [
         title: "Rocker Red",
         subtitle: "Sports Café",
         aspect: "aspect-video",
-        span: "md:col-span-2",
+        span: "sm:col-span-2",
     },
     {
         id: 6,
@@ -158,7 +158,7 @@ export default function ImageGallery() {
                     <span className="text-[8px] font-mono uppercase tracking-[0.8em] text-white/20 block mb-5">
                         Detail Gallery
                     </span>
-                    <h2 className="text-3xl md:text-7xl font-black tracking-[-0.04em] text-white/90 uppercase mb-5 leading-none">
+                    <h2 className="text-2xl sm:text-4xl md:text-7xl font-black tracking-[-0.04em] text-white/90 uppercase mb-5 leading-none">
                         Mechanical
                         <br />
                         <span className="text-white/30">Art</span>
@@ -168,7 +168,7 @@ export default function ImageGallery() {
             </div>
 
             {/* Gallery Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
                 {GALLERY_IMAGES.map((img, idx) => (
                     <motion.div
                         key={`${img.id}-${idx}`}

@@ -126,7 +126,8 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
             const canvas = canvasRef.current;
             if (!canvas) return;
 
-            const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR for performance
+            const isMobile = window.innerWidth < 768;
+            const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
             canvas.width = window.innerWidth * dpr;
             canvas.height = window.innerHeight * dpr;
 
@@ -164,7 +165,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
                         {/* Central loading content */}
                         <div className="relative flex flex-col items-center z-10">
                             {/* Brand name */}
-                            <div className="flex items-center gap-3 mb-12">
+                            <div className="flex items-center gap-3 mb-8 sm:mb-10 md:mb-12">
                                 <div className="h-px w-8 bg-gradient-to-r from-transparent to-[#c8a96e]/30" />
                                 <span className="text-[7px] font-mono uppercase tracking-[1em] text-[#c8a96e]/40">
                                     Royal Enfield
@@ -174,12 +175,12 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
 
                             {/* Percentage display */}
                             <motion.div
-                                className="relative mb-10"
+                                className="relative mb-6 sm:mb-8 md:mb-10"
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.8 }}
                             >
-                                <span className="text-6xl md:text-8xl font-extralight tracking-[-0.02em] text-white/90 tabular-nums">
+                                <span className="text-5xl sm:text-6xl md:text-8xl font-extralight tracking-[-0.02em] text-white/90 tabular-nums">
                                     {loadingProgress}
                                 </span>
                                 <span className="text-lg md:text-xl font-extralight text-white/30 ml-1">
@@ -188,7 +189,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
                             </motion.div>
 
                             {/* Progress bar */}
-                            <div className="relative w-64 md:w-80 mb-8">
+                            <div className="relative w-48 sm:w-64 md:w-80 mb-6 sm:mb-8">
                                 {/* Track */}
                                 <div className="h-px bg-white/[0.06] rounded-full overflow-hidden">
                                     {/* Fill */}

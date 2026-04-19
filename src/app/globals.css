@@ -620,3 +620,23 @@ a {
   background-size: 200% 200%;
   animation: shimmer 2s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   CUSTOM UTILITIES
+   ═══════════════════════════════════════════════════════════ */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Extra typography scaling */
+@media (max-width: 639px) {
+  .text-display {
+    font-size: 2rem;
+    line-height: 1;
+  }
+}

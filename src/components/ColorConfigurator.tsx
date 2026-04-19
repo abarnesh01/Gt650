@@ -135,13 +135,15 @@ function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
 
             const imgRatio = img.width / img.height;
             const canvasRatio = w / h;
+            const isMobile = w < 1200;
+            const fitFactor = isMobile ? 0.92 : 0.82;
 
             let drawW: number, drawH: number;
             if (imgRatio > canvasRatio) {
-                drawW = w * 0.82;
+                drawW = w * fitFactor;
                 drawH = drawW / imgRatio;
             } else {
-                drawH = h * 0.82;
+                drawH = h * fitFactor;
                 drawW = drawH * imgRatio;
             }
 
@@ -291,7 +293,7 @@ function ColorSwatch({ color, isActive, onClick, index }: SwatchProps) {
                 }}
                 whileHover={{ scale: isActive ? 1.4 : 1.2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="relative w-10 h-10 rounded-full shadow-lg cursor-pointer"
+                className="relative w-10 h-10 sm:w-10 sm:h-10 rounded-full shadow-lg cursor-pointer"
                 style={{
                     background: `radial-gradient(circle at 35% 30%, ${color.accent}ee, ${color.hex})`,
                     boxShadow: isActive
@@ -336,7 +338,7 @@ function SpecsPanel({ color }: { color: ColorVariant }) {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute right-8 md:right-16 top-1/2 -translate-y-1/2 z-10 pointer-events-none hidden lg:block"
+            className="absolute right-8 md:right-16 top-1/2 -translate-y-1/2 z-10 pointer-events-none hidden md:block"
         >
             <div className="glass-premium rounded-sm p-6 w-56">
                 <AnimatePresence mode="wait">
@@ -433,21 +435,21 @@ export default function ColorConfigurator() {
             </div>
 
             {/* Header */}
-            <div className="absolute top-[12%] md:top-[14%] left-1/2 -translate-x-1/2 text-center z-10 pointer-events-none w-full px-4">
+            <div className="absolute top-[10%] sm:top-[12%] md:top-[14%] left-1/2 -translate-x-1/2 text-center z-10 pointer-events-none w-full px-4">
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                     viewport={{ once: true }}
                 >
-                    <span className="text-[8px] md:text-[9px] font-mono uppercase tracking-[0.8em] text-white/20 block mb-4">
+                    <span className="text-[7px] sm:text-[8px] md:text-[9px] font-mono uppercase tracking-[0.6em] sm:tracking-[0.8em] text-white/20 block mb-3 sm:mb-4">
                         Color Configurator
                     </span>
-                    <h2 className="text-4xl md:text-8xl font-black tracking-[-0.04em] text-white/95 uppercase mb-3 leading-none">
+                    <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-black tracking-[-0.04em] text-white/95 uppercase mb-2 sm:mb-3 leading-none">
                         Signature
                     </h2>
-                    <div className="h-px w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto my-5" />
-                    <p className="max-w-md mx-auto text-[8px] md:text-[10px] font-mono uppercase tracking-[0.6em] text-white/25 leading-loose">
+                    <div className="h-px w-12 sm:w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto my-3 sm:my-5" />
+                    <p className="max-w-md mx-auto text-[7px] sm:text-[8px] md:text-[10px] font-mono uppercase tracking-[0.4em] sm:tracking-[0.6em] text-white/25 leading-loose">
                         Real finishes · Studio perfected · Zero simulation
                     </p>
                 </motion.div>
@@ -504,9 +506,9 @@ export default function ColorConfigurator() {
             <SpecsPanel color={activeColor} />
 
             {/* Bottom Control Bar */}
-            <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-7">
+            <div className="absolute bottom-5 sm:bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4 sm:gap-5 md:gap-7 w-full px-4">
                 {/* Swatches */}
-                <div className="flex items-center gap-6 md:gap-8 p-3.5 rounded-full glass-premium">
+                <div className="flex items-center gap-4 sm:gap-5 md:gap-6 lg:gap-8 p-3 sm:p-3.5 rounded-full glass-premium max-w-full overflow-x-auto scrollbar-hide">
                     {COLORS.map((color, idx) => (
                         <ColorSwatch
                             key={color.id}
@@ -529,10 +531,10 @@ export default function ColorConfigurator() {
                             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                             className="flex flex-col items-center gap-1.5"
                         >
-                            <h3 className="text-[11px] md:text-sm font-mono uppercase tracking-[0.7em] text-white/90">
+                            <h3 className="text-[10px] sm:text-[11px] md:text-sm font-mono uppercase tracking-[0.5em] sm:tracking-[0.7em] text-white/90">
                                 {activeColor.name}
                             </h3>
-                            <span className="text-[7px] font-mono uppercase tracking-[0.5em] text-white/20">
+                            <span className="text-[6px] sm:text-[7px] font-mono uppercase tracking-[0.5em] text-white/20">
                                 {activeColor.spec}
                             </span>
                         </motion.div>

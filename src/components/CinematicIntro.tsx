@@ -223,7 +223,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
                             />
                         </div>
 
-                        <h1 className="text-4xl md:text-7xl font-black tracking-[-0.04em] text-white/95 uppercase leading-none">
+                        <h1 className="text-3xl sm:text-4xl md:text-7xl font-black tracking-[-0.04em] text-white/95 uppercase leading-none">
                             Continental GT 650
                         </h1>
 

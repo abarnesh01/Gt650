@@ -85,7 +85,7 @@ const TextSection = ({ title, subtitle, alignment, range }: {
         <motion.div className="flex items-center gap-3 mb-6">
           <div className={`h-px w-8 bg-[#c8a96e]/30 ${alignment === 'right' ? 'ml-auto' : alignment === 'center' ? 'mx-auto' : ''}`} />
         </motion.div>
-        <h2 className="text-3xl md:text-7xl lg:text-9xl font-black tracking-[-0.04em] text-white/95 uppercase mb-4 md:mb-6 leading-[0.9]">
+        <h2 className="text-2xl sm:text-3xl md:text-7xl lg:text-9xl font-black tracking-[-0.04em] text-white/95 uppercase mb-4 md:mb-6 leading-[0.9]">
           {title}
         </h2>
         <div className={`h-[1px] w-16 md:w-20 bg-gradient-to-r from-[#c8a96e]/30 to-transparent mb-4 md:mb-6 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto bg-gradient-to-l' : ''
@@ -212,7 +212,7 @@ export default function Home() {
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#c8a96e]/20" />
           </div>
 
-          <h3 className="text-2xl md:text-6xl font-extralight text-white/80 tracking-[-0.02em] text-center max-w-3xl px-6 leading-[1.15]">
+          <h3 className="text-xl sm:text-2xl md:text-6xl font-extralight text-white/80 tracking-[-0.02em] text-center max-w-3xl px-6 leading-[1.15]">
             Crafting the future,
             <br />
             <span className="text-white/30">informed by the past.</span>

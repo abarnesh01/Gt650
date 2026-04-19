@@ -78,61 +78,60 @@ function HotspotMarker({
     return (
         <button
             onClick={onClick}
-            className="absolute z-30 group"
+            className="absolute z-30 group p-4 -m-4" // Increase hit area with padding/negative margin
             style={{ left: hotspot.x, top: hotspot.y, transform: "translate(-50%, -50%)" }}
             aria-label={`View ${hotspot.label} details`}
         >
-            {/* Outer ripple */}
-            <motion.div
-                className="absolute inset-[-8px] rounded-full border border-[#c8a96e]/20"
-                animate={{
-                    scale: [1, 1.8, 2.2],
-                    opacity: [0.4, 0.1, 0],
-                }}
-                transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                }}
-            />
+            {/* Outer ripples and core dot remain same but with scaled sizes if needed */}
+            <div className="relative">
+                <motion.div
+                    className="absolute inset-[-8px] rounded-full border border-[#c8a96e]/20"
+                    animate={{
+                        scale: [1, 1.8, 2.2],
+                        opacity: [0.4, 0.1, 0],
+                    }}
+                    transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "easeOut",
+                    }}
+                />
 
-            {/* Second ripple */}
-            <motion.div
-                className="absolute inset-[-4px] rounded-full border border-[#c8a96e]/30"
-                animate={{
-                    scale: [1, 1.5, 1.8],
-                    opacity: [0.5, 0.15, 0],
-                }}
-                transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.4,
-                }}
-            />
+                <motion.div
+                    className="absolute inset-[-4px] rounded-full border border-[#c8a96e]/30"
+                    animate={{
+                        scale: [1, 1.5, 1.8],
+                        opacity: [0.5, 0.15, 0],
+                    }}
+                    transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "easeOut",
+                        delay: 0.4,
+                    }}
+                />
 
-            {/* Core dot */}
-            <motion.div
-                className="relative w-4 h-4 rounded-full cursor-pointer"
-                animate={{
-                    scale: isActive ? 1.3 : 1,
-                }}
-                whileHover={{ scale: 1.4 }}
-                style={{
-                    background: "radial-gradient(circle at 40% 40%, #e8d5a8, #c8a96e)",
-                    boxShadow: "0 0 12px rgba(200,169,110,0.5), 0 0 30px rgba(200,169,110,0.2)",
-                }}
-            />
+                <motion.div
+                    className="relative w-4 h-4 md:w-5 md:h-5 rounded-full cursor-pointer"
+                    animate={{
+                        scale: isActive ? 1.3 : 1,
+                    }}
+                    whileHover={{ scale: 1.4 }}
+                    style={{
+                        background: "radial-gradient(circle at 40% 40%, #e8d5a8, #c8a96e)",
+                        boxShadow: "0 0 12px rgba(200,169,110,0.5), 0 0 30px rgba(200,169,110,0.2)",
+                    }}
+                />
 
-            {/* Label */}
-            <motion.div
-                className="absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                initial={false}
-            >
-                <span className="text-[8px] font-mono uppercase tracking-[0.4em] text-white/50 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-sm border border-white/[0.06]">
-                    {hotspot.label}
-                </span>
-            </motion.div>
+                {/* Label - hidden on mobile until clicked or just smaller */}
+                <motion.div
+                    className="absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none hidden sm:block"
+                >
+                    <span className="text-[8px] font-mono uppercase tracking-[0.4em] text-white/50 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-sm border border-white/[0.06]">
+                        {hotspot.label}
+                    </span>
+                </motion.div>
+            </div>
         </button>
     );
 }

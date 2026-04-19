@@ -73,12 +73,12 @@ export default function PerformanceSpecs() {
                     <span className="text-[7px] md:text-[8px] font-mono uppercase tracking-[0.8em] text-[#c8a96e]/40 block mb-4 md:mb-5">
                         Performance
                     </span>
-                    <h2 className="text-3xl md:text-7xl font-black tracking-[-0.04em] text-white/90 uppercase mb-4 md:mb-5 leading-none">
+                    <h2 className="text-2xl sm:text-4xl md:text-7xl font-black tracking-[-0.04em] text-white/90 uppercase mb-4 md:mb-5 leading-none">
                         Born to
                         <br />
                         <span className="text-white/30">Perform</span>
                     </h2>
-                    <div className="h-px w-16 bg-gradient-to-r from-[#c8a96e]/30 to-transparent" />
+                    <div className="h-[1px] w-12 sm:w-16 bg-gradient-to-r from-[#c8a96e]/30 to-transparent" />
                 </motion.div>
             </div>
 
@@ -100,11 +100,11 @@ export default function PerformanceSpecs() {
                             }}
                         />
 
-                        <div className="flex items-baseline gap-1 mb-2 md:mb-3">
-                            <span className="text-3xl md:text-5xl font-black tracking-[-0.02em] text-white/90">
+                        <div className="flex items-baseline gap-1 mb-1 sm:mb-2 md:mb-3">
+                            <span className="text-2xl sm:text-3xl md:text-5xl font-black tracking-[-0.02em] text-white/90">
                                 {spec.value}
                             </span>
-                            <span className="text-xs md:text-base font-light tracking-wider text-[#c8a96e]/60 uppercase">
+                            <span className="text-[10px] sm:text-xs md:text-base font-light tracking-wider text-[#c8a96e]/60 uppercase">
                                 {spec.unit}
                             </span>
                         </div>
