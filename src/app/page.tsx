@@ -209,7 +209,48 @@ export default function Home() {
         <ColorConfigurator />
       </section>
 
-      {/* ═══ SECTION 5: IMAGE GALLERY ═══ */}
+      {/* ═══ SECTION 5: CINEMATIC SHOWCASE (New) ═══ */}
+      <section className="relative h-[200vh] bg-black overflow-hidden z-20">
+        <div className="sticky top-0 h-screen w-full flex items-center justify-center">
+          {/* Background Video */}
+          <motion.div
+            className="absolute inset-0 z-0"
+            style={{
+              opacity: useTransform(scrollYProgress, [0.72, 0.75, 0.82, 0.85], [0, 1, 1, 0]),
+              scale: useTransform(scrollYProgress, [0.72, 0.85], [1.1, 1])
+            }}
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover brightness-50"
+            >
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-motorcyclist-riding-on-a-highway-at-sunset-10557-large.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+          </motion.div>
+
+          {/* Floating Content */}
+          <motion.div
+            className="relative z-10 text-center px-6"
+            style={{
+              y: useTransform(scrollYProgress, [0.72, 0.85], [100, -100]),
+              opacity: useTransform(scrollYProgress, [0.72, 0.75, 0.82, 0.85], [0, 1, 1, 0])
+            }}
+          >
+            <span className="text-[8px] font-mono uppercase tracking-[1em] text-[#c8a96e] block mb-4">
+              Pure Spirit
+            </span>
+            <h2 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none">
+              RIDE UNTAMED
+            </h2>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 6: IMAGE GALLERY ═══ */}
       <section className="relative z-20">
         <ImageGallery />
       </section>
