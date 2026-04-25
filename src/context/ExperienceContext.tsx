@@ -26,7 +26,7 @@ export function ExperienceProvider({ children }: { children: React.ReactNode }) 
     const [bikeParts, setBikeParts] = useState({ exhaust: "classic", seat: "leather" });
 
     const setBikePart = (part: 'exhaust' | 'seat', value: string) => {
-        setBikeParts(prev => ({ ...prev, [part]: value }));
+        setBikeParts((prev: { exhaust: string; seat: string }) => ({ ...prev, [part]: value }));
     };
 
     useEffect(() => {

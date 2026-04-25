@@ -139,7 +139,6 @@ export default function Motorcycle3D() {
                         <MotorcycleModel
                             isRealMode={isRealMode}
                             isSportMode={isSportMode}
-                            parts={{ exhaust: "classic", seat: "standard", handlebar: "clip-on" }}
                             onPartHover={setHoveredPart}
                         />
                     </Float>
