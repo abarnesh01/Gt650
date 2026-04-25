@@ -12,6 +12,8 @@ interface ExperienceContextType {
     quality: Quality;
     isMuted: boolean;
     setMuted: (val: boolean) => void;
+    bikeParts: { exhaust: string; seat: string };
+    setBikePart: (part: 'exhaust' | 'seat', value: string) => void;
 }
 
 const ExperienceContext = createContext<ExperienceContextType | undefined>(undefined);
@@ -21,6 +23,11 @@ export function ExperienceProvider({ children }: { children: React.ReactNode }) 
     const [isSportMode, setSportMode] = useState(false);
     const [quality, setQuality] = useState<Quality>("desktop");
     const [isMuted, setMuted] = useState(false);
+    const [bikeParts, setBikeParts] = useState({ exhaust: "classic", seat: "leather" });
+
+    const setBikePart = (part: 'exhaust' | 'seat', value: string) => {
+        setBikeParts(prev => ({ ...prev, [part]: value }));
+    };
 
     useEffect(() => {
         const checkQuality = () => {
@@ -43,6 +50,8 @@ export function ExperienceProvider({ children }: { children: React.ReactNode }) 
                 quality,
                 isMuted,
                 setMuted,
+                bikeParts,
+                setBikePart
             }}
         >
             {children}
