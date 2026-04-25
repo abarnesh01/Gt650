@@ -100,6 +100,7 @@ const TextSection = ({ title, subtitle, alignment, range }: {
 
 import { useExperience } from "@/context/ExperienceContext";
 import ExperienceControls from "@/components/ExperienceControls";
+import Motorcycle3D from "@/components/Motorcycle3D";
 
 /* ──────────────────────────────────────────────────────────
    HOME PAGE
@@ -107,6 +108,7 @@ import ExperienceControls from "@/components/ExperienceControls";
 export default function Home() {
   const [introComplete, setIntroComplete] = useState(false);
   const { isSportMode, isRealMode } = useExperience();
+  const { scrollYProgress } = useScroll();
 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
