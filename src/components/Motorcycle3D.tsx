@@ -28,20 +28,28 @@ function MotorcycleModel({
     onPartHover: (part: string | null) => void
 }) {
     const { bikeParts } = useExperience();
-    // Using a reliable public GLB
-    const { scene } = useGLTF("https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/motorcycle/model.gltf");
+
+    // Attempt to load the model with a fallback mechanism
+    let model;
+    try {
+        // Using a more reliable sample model URL
+        model = useGLTF("https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb");
+    } catch (e) {
+        console.error("GLB Load Error:", e);
+    }
+
     const groupRef = useRef<THREE.Group>(null);
 
-    // Apply customizations and hover effects
+    // Apply customizations if model loaded
     useEffect(() => {
-        scene.traverse((child) => {
+        if (!model) return;
+        model.scene.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
                 const mesh = child as THREE.Mesh;
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
 
-                // Simple part detection based on names (placeholders as we don't know the exact model hierarchy)
-                if (mesh.name.toLowerCase().includes("tank")) {
+                if (mesh.name.toLowerCase().includes("tank") || child.type === 'Mesh') {
                     mesh.material = new THREE.MeshStandardMaterial({
                         color: isSportMode ? "#ef4444" : "#1a3b2a",
                         roughness: 0.1,
@@ -50,18 +58,27 @@ function MotorcycleModel({
                 }
             }
         });
-    }, [scene, isSportMode]);
+    }, [model, isSportMode, bikeParts]);
+
+    if (!model) {
+        return (
+            <mesh position={[0, 1, 0]} castShadow>
+                <boxGeometry args={[2, 1, 4]} />
+                <meshStandardMaterial color={isSportMode ? "#ef4444" : "#c8a96e"} metalness={1} roughness={0.1} />
+            </mesh>
+        );
+    }
 
     return (
-        <group ref={groupRef} dispose={null} scale={1.5} rotation={[0, -Math.PI / 4, 0]}>
+        <group ref={groupRef} dispose={null} scale={2} rotation={[0, -Math.PI / 4, 0]}>
             <primitive
-                object={scene}
+                object={model.scene}
                 onPointerOver={(e: any) => {
                     e.stopPropagation();
                     const name = e.object.name.toLowerCase();
                     if (name.includes("engine")) onPartHover("engine");
                     else if (name.includes("exhaust")) onPartHover("exhaust");
-                    else if (name.includes("tank")) onPartHover("tank");
+                    else onPartHover("component");
                 }}
                 onPointerOut={() => onPartHover(null)}
             />
