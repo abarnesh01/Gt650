@@ -101,6 +101,7 @@ const TextSection = ({ title, subtitle, alignment, range }: {
 import { useExperience } from "@/context/ExperienceContext";
 import ExperienceControls from "@/components/ExperienceControls";
 import Motorcycle3D from "@/components/Motorcycle3D";
+import SoundEngine from "@/components/SoundEngine";
 
 /* ──────────────────────────────────────────────────────────
    HOME PAGE
