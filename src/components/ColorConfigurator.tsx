@@ -385,13 +385,9 @@ function SpecsPanel({ color }: { color: ColorVariant }) {
    ────────────────────────────────────────────────────────── */
 export default function ColorConfigurator() {
     const [activeColor, setActiveColor] = useState<ColorVariant>(COLORS[0]);
-    const [activeExhaust, setActiveExhaust] = useState("classic");
-    const [activeSeat, setActiveSeat] = useState("leather");
+    const { bikeParts, setBikePart, isSportMode } = useExperience();
     const { images, progress, loaded } = usePreloadImages(COLORS);
     const sectionRef = useRef<HTMLElement>(null);
-    const { isSportMode } = useExperience();
-
-    // ... Keyboard navigation and other effects ...
 
     const customizationOptions = [
         {
@@ -401,8 +397,8 @@ export default function ColorConfigurator() {
                 { id: "scrambler", name: "High-Mount Scrambler" },
                 { id: "shorty", name: "Shorty Slash-Cut" }
             ],
-            active: activeExhaust,
-            setActive: setActiveExhaust
+            active: bikeParts.exhaust,
+            setActive: (val: string) => setBikePart('exhaust', val)
         },
         {
             label: "Seat",
@@ -411,10 +407,27 @@ export default function ColorConfigurator() {
                 { id: "solo", name: "Single Solo Seat" },
                 { id: "touring", name: "Touring Comfort" }
             ],
-            active: activeSeat,
-            setActive: setActiveSeat
+            active: bikeParts.seat,
+            setActive: (val: string) => setBikePart('seat', val)
         }
     ];
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            const idx = COLORS.findIndex((c) => c.id === activeColor.id);
+            if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                e.preventDefault();
+                setActiveColor(COLORS[(idx + 1) % COLORS.length]);
+            } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                e.preventDefault();
+                setActiveColor(COLORS[(idx - 1 + COLORS.length) % COLORS.length]);
+            }
+        };
+
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [activeColor]);
 
     return (
         <section
