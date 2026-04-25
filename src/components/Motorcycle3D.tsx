@@ -15,20 +15,19 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useExperience } from "@/context/ExperienceContext";
-import { useScroll } from "framer-motion";
+import { useScroll, motion, AnimatePresence } from "framer-motion";
 
 // Motorcycle Model Component
 function MotorcycleModel({
     isRealMode,
     isSportMode,
-    parts,
     onPartHover
 }: {
     isRealMode: boolean;
     isSportMode: boolean;
-    parts: { exhaust: string; seat: string; handlebar: string };
     onPartHover: (part: string | null) => void
 }) {
+    const { bikeParts } = useExperience();
     // Using a reliable public GLB
     const { scene } = useGLTF("https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/motorcycle/model.gltf");
     const groupRef = useRef<THREE.Group>(null);
