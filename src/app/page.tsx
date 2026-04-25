@@ -121,6 +121,7 @@ export default function Home() {
       data-mode={isSportMode ? "sport" : "eco"}
       data-env={isRealMode ? "real" : "studio"}
     >
+      <SoundEngine />
       {/* Cinematic Intro */}
       <CinematicIntro onComplete={handleIntroComplete} />
 
@@ -218,6 +219,31 @@ export default function Home() {
         {/* Divider */}
         <div className="section-divider absolute top-0 left-0 right-0" />
 
+        {/* Particles Background Upgrade */}
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -100, 0],
+                opacity: [0, 1, 0],
+                scale: [0, 1.5, 0],
+              }}
+              transition={{
+                duration: 10 + Math.random() * 20,
+                repeat: Infinity,
+                ease: "linear",
+                delay: Math.random() * 10,
+              }}
+            />
+          ))}
+        </div>
+
         {/* Background watermark */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-[0.015]">
           <span className="text-[30vw] font-black uppercase tracking-[-0.04em] text-white">
@@ -250,11 +276,13 @@ export default function Home() {
 
           <motion.a
             href="#configurator"
-            className="btn-premium mt-8"
-            whileHover={{ y: -2 }}
+            className="btn-premium mt-8 group relative overflow-visible"
+            whileHover={{ y: -5 }}
             whileTap={{ scale: 0.98 }}
           >
             <span className="relative z-10">Own the Legend</span>
+            <div className="absolute inset-0 bg-[#c8a96e]/20 blur-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+            <div className="absolute -inset-1 border border-[#c8a96e]/50 rounded-sm opacity-0 group-hover:opacity-100 animate-pulse-glow" />
           </motion.a>
 
           <p className="text-[7px] font-mono uppercase tracking-[0.5em] text-white/12 mt-4">
