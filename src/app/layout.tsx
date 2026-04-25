@@ -56,6 +56,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { ExperienceProvider } from "@/context/ExperienceContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -76,7 +78,9 @@ export default function RootLayout({
             "var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
         }}
       >
-        {children}
+        <ExperienceProvider>
+          {children}
+        </ExperienceProvider>
       </body>
     </html>
   );
