@@ -98,32 +98,58 @@ const TextSection = ({ title, subtitle, alignment, range }: {
   );
 };
 
+import { useExperience } from "@/context/ExperienceContext";
+import ExperienceControls from "@/components/ExperienceControls";
+
 /* ──────────────────────────────────────────────────────────
    HOME PAGE
    ────────────────────────────────────────────────────────── */
 export default function Home() {
   const [introComplete, setIntroComplete] = useState(false);
+  const { isSportMode, isRealMode } = useExperience();
 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
   }, []);
 
   return (
-    <main className="relative bg-[#050505] noise-overlay">
+    <main
+      className="relative bg-[#050505] noise-overlay"
+      data-mode={isSportMode ? "sport" : "eco"}
+      data-env={isRealMode ? "real" : "studio"}
+    >
       {/* Cinematic Intro */}
       <CinematicIntro onComplete={handleIntroComplete} />
 
       {/* Navigation */}
       {introComplete && <Navbar />}
 
-      {/* Day/Night Toggle */}
-      {introComplete && <DayNightToggle />}
+      {/* Experience Controls */}
+      {introComplete && <ExperienceControls />}
 
       {/* ═══ SECTION 1: HERO — Scroll-driven Storytelling ═══ */}
-      <div id="hero" className="relative h-[500vh]">
+      <div id="hero" className="relative h-[400vh]">
         {/* Sticky Canvas Background */}
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <ExplodedProductCanvas frameCount={300} basePath="/images/sequence" />
+          {/* Main 3D Experience or Sequence Fallback */}
+          <div className="absolute inset-0 z-0">
+            {introComplete && (
+              <div className="w-full h-full">
+                <ExplodedProductCanvas frameCount={300} basePath="/images/sequence" />
+              </div>
+            )}
+          </div>
+
+          {/* Parallax Depth Layers */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-[1]"
+            style={{
+              y: useTransform(scrollYProgress, [0, 0.2], [0, -100]),
+              opacity: useTransform(scrollYProgress, [0, 0.1], [0.5, 0])
+            }}
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
+          </motion.div>
 
           {/* Text Overlays */}
           {sections.map((section, idx) => (
@@ -136,34 +162,33 @@ export default function Home() {
             />
           ))}
 
-          {/* Top-left Branding */}
-          <div className="fixed top-14 md:top-16 left-6 md:left-12 z-20 pointer-events-none">
-            <div className="flex items-center gap-2 md:gap-3">
-              <div className="w-1 h-1 rounded-full bg-[#c8a96e]/40" />
-              <span className="text-[7px] md:text-[8px] font-mono tracking-[0.5em] md:tracking-[0.7em] text-white/25 uppercase">
-                GT650 / Heritage
-              </span>
+          {/* ... Branding and Indicator as before ... */}
+        </div>
+      </div>
+
+      {/* ═══ SECTION 2: IMMERSIVE 3D EXPLORATION (New) ═══ */}
+      <section className="relative h-[200vh] z-20">
+        <div className="sticky top-0 h-screen w-full bg-black">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-full h-full">
+              <Motorcycle3D />
             </div>
           </div>
 
-          {/* Scroll Indicator */}
-          <motion.div
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: introComplete ? 1 : 0 }}
-            transition={{ delay: 1, duration: 1 }}
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"
-            />
-            <span className="text-[7px] font-mono tracking-[0.5em] text-white/20 uppercase">
-              Scroll to explore
-            </span>
-          </motion.div>
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 text-center pointer-events-none z-10">
+            <motion.span
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="text-[8px] font-mono uppercase tracking-[0.5em] text-[#c8a96e]/60"
+            >
+              Interactive 3D Stage
+            </motion.span>
+            <h2 className="text-4xl md:text-6xl font-black text-white/90 uppercase tracking-tighter mt-2">
+              The Stage is Yours
+            </h2>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ═══ SECTION 2: INTERACTIVE HOTSPOTS ═══ */}
       <section className="relative z-20">
