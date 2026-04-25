@@ -1,29 +1,29 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useInView } from "framer-motion";
 
 const SPECS = [
     {
-        value: "47",
+        value: 47,
         unit: "HP",
         label: "Max Power",
         sublabel: "@ 7,250 RPM",
     },
     {
-        value: "52",
+        value: 52,
         unit: "Nm",
         label: "Peak Torque",
         sublabel: "@ 5,250 RPM",
     },
     {
-        value: "648",
+        value: 648,
         unit: "cc",
         label: "Displacement",
         sublabel: "Parallel Twin",
     },
     {
-        value: "202",
+        value: 202,
         unit: "kg",
         label: "Kerb Weight",
         sublabel: "Ready to Ride",
@@ -48,6 +48,34 @@ const FEATURES = [
         description: "Steel twin downtube cradle frame with Harris Performance engineering DNA.",
     },
 ];
+
+function AnimatedNumber({ value, duration = 2 }: { value: number; duration?: number }) {
+    const ref = useRef<HTMLSpanElement>(null);
+    const motionValue = useMotionValue(0);
+    const springValue = useSpring(motionValue, {
+        damping: 30,
+        stiffness: 100,
+    });
+    const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+    useEffect(() => {
+        if (isInView) {
+            motionValue.set(value);
+        }
+    }, [isInView, value, motionValue]);
+
+    useEffect(() => {
+        springValue.on("change", (latest) => {
+            if (ref.current) {
+                ref.current.textContent = Intl.NumberFormat("en-US").format(
+                    Math.floor(latest)
+                );
+            }
+        });
+    }, [springValue]);
+
+    return <span ref={ref}>0</span>;
+}
 
 export default function PerformanceSpecs() {
     return (
@@ -102,7 +130,7 @@ export default function PerformanceSpecs() {
 
                         <div className="flex items-baseline gap-1 mb-1 sm:mb-2 md:mb-3">
                             <span className="text-2xl sm:text-3xl md:text-5xl font-black tracking-[-0.02em] text-white/90">
-                                {spec.value}
+                                <AnimatedNumber value={spec.value} />
                             </span>
                             <span className="text-[10px] sm:text-xs md:text-base font-light tracking-wider text-[#c8a96e]/60 uppercase">
                                 {spec.unit}
