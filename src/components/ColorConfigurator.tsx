@@ -1,7 +1,7 @@
-"use client";
-
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import { useTexture, PerspectiveCamera, Environment, ContactShadows } from "@react-three/drei";
 import { useExperience } from "@/context/ExperienceContext";
 
 /* ──────────────────────────────────────────────────────────
@@ -13,6 +13,7 @@ const COLORS = [
         hex: "#1a3b2a",
         id: "green",
         src: "/images/british_racing_green.webp",
+        texture: "/textures/gt650-green.png",
         accent: "#2d6b47",
         spec: "Classic Heritage",
         description: "The definitive café racer hue. Rich British Racing Green with gold coach-lining, heritage badge.",
@@ -22,6 +23,7 @@ const COLORS = [
         hex: "#b01c1c",
         id: "red",
         src: "/images/rocker_red.webp",
+        texture: "/textures/gt650-red.png",
         accent: "#e63946",
         spec: "Sports Café",
         description: "Bold, visceral and unapologetic. Race-inspired red with chrome tank rails.",
@@ -31,6 +33,7 @@ const COLORS = [
         hex: "#1b3b5a",
         id: "blue",
         src: "/images/ventura_storm.webp",
+        texture: "/textures/gt650-blue.png",
         accent: "#457b9d",
         spec: "Midnight Tourer",
         description: "Deep oceanic blue with a metallic flake finish. Enigmatic and refined.",
@@ -40,6 +43,7 @@ const COLORS = [
         hex: "#1c1c1c",
         id: "black",
         src: "/images/dux_deluxe.webp",
+        texture: "/textures/gt650-black.png",
         accent: "#3a3a3a",
         spec: "Stealth Edition",
         description: "Blacked-out sophistication. Piano black with subtle chrome accents.",
@@ -49,6 +53,7 @@ const COLORS = [
         hex: "#c0c0c0",
         id: "chrome",
         src: "/images/mister_clean.webp",
+        texture: "/textures/gt650-chrome.png",
         accent: "#d4d4d4",
         spec: "Chrome Signature",
         description: "Full chrome brilliance. Mirror-finish tank with heritage pinstriping.",
@@ -109,148 +114,52 @@ function usePreloadImages(colors: readonly ColorVariant[]) {
 /* ──────────────────────────────────────────────────────────
    CROSSFADE CANVAS – dual-layer canvas for cinematic fades
    ────────────────────────────────────────────────────────── */
-interface CrossfadeCanvasProps {
-    images: Map<string, HTMLImageElement>;
-    activeId: string;
-    loaded: boolean;
-}
+/* ──────────────────────────────────────────────────────────
+   3D BIKE RENDERING ENGINE – Using robust texture method
+   ────────────────────────────────────────────────────────── */
+function Bike3DModel({ texturePath }: { texturePath: string }) {
+    const texture = useTexture(texturePath);
 
-function CrossfadeCanvas({ images, activeId, loaded }: CrossfadeCanvasProps) {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const prevIdRef = useRef<string>(activeId);
-    const animRef = useRef<number>(0);
-
-    const transitionRef = useRef({
-        fromId: activeId,
-        toId: activeId,
-        progress: 1,
-        active: false,
-        scale: 1,
-    });
-
-    const drawImage = useCallback(
-        (ctx: CanvasRenderingContext2D, img: HTMLImageElement, w: number, h: number, alpha: number, scale: number) => {
-            if (alpha <= 0.001) return;
-            ctx.save();
-            ctx.globalAlpha = alpha;
-
-            const imgRatio = img.width / img.height;
-            const canvasRatio = w / h;
-            const isMobile = w < 1200;
-            const fitFactor = isMobile ? 0.92 : 0.82;
-
-            let drawW: number, drawH: number;
-            if (imgRatio > canvasRatio) {
-                drawW = w * fitFactor;
-                drawH = drawW / imgRatio;
-            } else {
-                drawH = h * fitFactor;
-                drawW = drawH * imgRatio;
-            }
-
-            drawW *= scale;
-            drawH *= scale;
-
-            const x = (w - drawW) / 2;
-            const y = (h - drawH) / 2;
-
-            // Soft shadow beneath bike
-            ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-            ctx.shadowBlur = 60;
-            ctx.shadowOffsetY = 20;
-
-            ctx.drawImage(img, x, y, drawW, drawH);
-            ctx.restore();
-        },
-        []
-    );
-
-    const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-    const animate = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        const w = canvas.width;
-        const h = canvas.height;
-
-        ctx.clearRect(0, 0, w, h);
-
-        const t = transitionRef.current;
-
-        if (t.active) {
-            t.progress = Math.min(t.progress + 0.016, 1); // ~0.6s at 60fps
-            const easedProgress = easeInOutCubic(t.progress);
-
-            t.scale = 1 + 0.025 * Math.sin(easedProgress * Math.PI);
-
-            const fromImg = images.get(t.fromId);
-            const toImg = images.get(t.toId);
-
-            if (fromImg) {
-                drawImage(ctx, fromImg, w, h, 1 - easedProgress, t.scale);
-            }
-
-            if (toImg) {
-                drawImage(ctx, toImg, w, h, easedProgress, t.scale);
-            }
-
-            if (t.progress >= 1) {
-                t.active = false;
-                t.scale = 1;
-            }
-        } else {
-            const img = images.get(t.toId);
-            if (img) {
-                drawImage(ctx, img, w, h, 1, 1);
-            }
-        }
-
-        animRef.current = requestAnimationFrame(animate);
-    }, [images, drawImage]);
-
-    useEffect(() => {
-        if (!loaded) return;
-        animRef.current = requestAnimationFrame(animate);
-        return () => cancelAnimationFrame(animRef.current);
-    }, [loaded, animate]);
-
-    useEffect(() => {
-        if (prevIdRef.current !== activeId) {
-            transitionRef.current = {
-                fromId: prevIdRef.current,
-                toId: activeId,
-                progress: 0,
-                active: true,
-                scale: 1,
-            };
-            prevIdRef.current = activeId;
-        }
-    }, [activeId]);
-
-    useEffect(() => {
-        const handleResize = () => {
-            const canvas = canvasRef.current;
-            if (!canvas) return;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = canvas.clientWidth * dpr;
-            canvas.height = canvas.clientHeight * dpr;
-        };
-
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    if (!texture) return null;
 
     return (
-        <canvas
-            ref={canvasRef}
-            className="absolute inset-0 w-full h-full"
-            style={{ imageRendering: "auto" }}
-        />
+        <group scale={1.2}>
+            <mesh position={[0, 0, 0]}>
+                <planeGeometry args={[5, 3]} />
+                <meshStandardMaterial
+                    map={texture}
+                    transparent={true}
+                    alphaTest={0.1}
+                    metalness={0.4}
+                    roughness={0.6}
+                    side={2} // DoubleSide
+                />
+            </mesh>
+        </group>
+    );
+}
+
+function Bike3DCanvas({ activeColorId }: { activeColorId: string }) {
+    const activeColor = COLORS.find(c => c.id === activeColorId) || COLORS[0];
+
+    return (
+        <Canvas shadows className="w-full h-[80vh]" dpr={[1, 2]}>
+            <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={40} />
+            <ambientLight intensity={0.5} />
+            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+
+            <Suspense fallback={null}>
+                <Bike3DModel texturePath={activeColor.texture} />
+                <Environment preset="studio" />
+                <ContactShadows
+                    position={[0, -1.5, 0]}
+                    opacity={0.4}
+                    scale={10}
+                    blur={2.5}
+                    far={4}
+                />
+            </Suspense>
+        </Canvas>
     );
 }
 
@@ -433,7 +342,7 @@ export default function ColorConfigurator() {
         <section
             ref={sectionRef}
             id="configurator"
-            className="relative h-screen w-full bg-[#050505] flex flex-col items-center justify-center overflow-hidden"
+            className="relative min-h-screen w-full bg-[#050505] flex flex-col items-center justify-center overflow-hidden py-16 md:py-24"
         >
             {/* Ambient background glow */}
             <motion.div
@@ -543,7 +452,7 @@ export default function ColorConfigurator() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <CrossfadeCanvas images={images} activeId={activeColor.id} loaded={loaded} />
+                        <Bike3DCanvas activeColorId={activeColor.id} />
                     </motion.div>
                 )}
 

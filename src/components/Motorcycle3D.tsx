@@ -17,6 +17,24 @@ import * as THREE from "three";
 import { useExperience } from "@/context/ExperienceContext";
 import { useScroll, motion, AnimatePresence } from "framer-motion";
 
+// Error Boundary for 3D Assets
+class SceneErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+    componentDidCatch(error: any, errorInfo: any) {
+        console.error("3D Scene Error:", error, errorInfo);
+    }
+    render() {
+        if (this.state.hasError) return null; // Render nothing on error
+        return this.props.children;
+    }
+}
+
 // Motorcycle Model Component
 function MotorcycleModel({
     isRealMode,
@@ -29,27 +47,23 @@ function MotorcycleModel({
 }) {
     const { bikeParts } = useExperience();
 
-    // Attempt to load the model with a fallback mechanism
-    let model;
-    try {
-        // Using a more reliable sample model URL
-        model = useGLTF("https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb");
-    } catch (e) {
-        console.error("GLB Load Error:", e);
-    }
-
+    // Load the actual motorcycle asset from the public folder
+    // Note: If /models/motorcycle.glb is invalid, this will trigger the error boundary
+    // or return an empty scene depending on how useGLTF handles the error content.
+    const { scene } = useGLTF("/models/motorcycle.glb");
     const groupRef = useRef<THREE.Group>(null);
 
     // Apply customizations if model loaded
     useEffect(() => {
-        if (!model) return;
-        model.scene.traverse((child) => {
+        if (!scene) return;
+        scene.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
                 const mesh = child as THREE.Mesh;
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
 
-                if (mesh.name.toLowerCase().includes("tank") || child.type === 'Mesh') {
+                // Handle dynamic color updates for bike parts
+                if (mesh.name.toLowerCase().includes("tank")) {
                     mesh.material = new THREE.MeshStandardMaterial({
                         color: isSportMode ? "#ef4444" : "#1a3b2a",
                         roughness: 0.1,
@@ -58,13 +72,13 @@ function MotorcycleModel({
                 }
             }
         });
-    }, [model, isSportMode, bikeParts]);
+    }, [scene, isSportMode, bikeParts]);
 
-    if (!model) {
+    if (!scene) {
         return (
-            <mesh position={[0, 1, 0]} castShadow>
-                <boxGeometry args={[2, 1, 4]} />
-                <meshStandardMaterial color={isSportMode ? "#ef4444" : "#c8a96e"} metalness={1} roughness={0.1} />
+            <mesh position={[0, 0.75, 0]} castShadow>
+                <boxGeometry args={[2, 1, 0.5]} />
+                <meshStandardMaterial color={isSportMode ? "#ef4444" : "#c8a96e"} />
             </mesh>
         );
     }
@@ -72,12 +86,13 @@ function MotorcycleModel({
     return (
         <group ref={groupRef} dispose={null} scale={2} rotation={[0, -Math.PI / 4, 0]}>
             <primitive
-                object={model.scene}
+                object={scene}
                 onPointerOver={(e: any) => {
                     e.stopPropagation();
                     const name = e.object.name.toLowerCase();
                     if (name.includes("engine")) onPartHover("engine");
                     else if (name.includes("exhaust")) onPartHover("exhaust");
+                    else if (name.includes("tank")) onPartHover("tank");
                     else onPartHover("component");
                 }}
                 onPointerOut={() => onPartHover(null)}
@@ -129,69 +144,48 @@ export default function Motorcycle3D() {
 
     return (
         <div className="w-full h-full">
-            <Canvas shadows={quality === "desktop"} dpr={[1, 2]}>
-                <Suspense fallback={null}>
-                    <PerspectiveCamera makeDefault fov={45} position={[5, 2, 5]} />
+            <SceneErrorBoundary>
+                <Canvas shadows={quality === "desktop"} dpr={[1, 2]}>
+                    <Suspense fallback={null}>
+                        <PerspectiveCamera makeDefault fov={45} position={[5, 2, 5]} />
 
-                    {/* Environment Transition */}
-                    {isRealMode ? (
-                        <Environment preset="sunset" background blur={0.5} />
-                    ) : (
-                        <Environment preset="studio" />
-                    )}
+                        {/* Environment Transition - No background as per 'Only the bike should be visible' */}
+                        <Environment preset={isRealMode ? "sunset" : "studio"} />
 
-                    {/* Lighting */}
-                    <ambientLight intensity={isRealMode ? 0.5 : 0.2} />
-                    <spotLight
-                        position={[10, 10, 10]}
-                        angle={0.15}
-                        penumbra={1}
-                        intensity={isSportMode ? 2 : 1}
-                        castShadow
-                        color={isSportMode ? "#ef4444" : "#fff"}
-                    />
-                    <pointLight position={[-10, -10, -10]} intensity={0.5} />
-
-                    <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.5}>
-                        <MotorcycleModel
-                            isRealMode={isRealMode}
-                            isSportMode={isSportMode}
-                            onPartHover={setHoveredPart}
+                        {/* Lighting */}
+                        <ambientLight intensity={isRealMode ? 0.5 : 0.2} />
+                        <spotLight
+                            position={[10, 10, 10]}
+                            angle={0.15}
+                            penumbra={1}
+                            intensity={isSportMode ? 2 : 1}
+                            castShadow
+                            color={isSportMode ? "#ef4444" : "#fff"}
                         />
-                    </Float>
+                        <pointLight position={[-10, -10, -10]} intensity={0.5} />
 
-                    {/* Studio Floor */}
-                    {!isRealMode && (
-                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-                            <planeGeometry args={[50, 50]} />
-                            <MeshReflectorMaterial
-                                blur={[300, 100]}
-                                resolution={2048}
-                                mixBlur={1}
-                                mixStrength={40}
-                                roughness={1}
-                                depthScale={1.2}
-                                minDepthThreshold={0.4}
-                                maxDepthThreshold={1.4}
-                                color="#101010"
-                                metalness={0.5}
+                        <Suspense fallback={null}>
+                            <MotorcycleModel
+                                isRealMode={isRealMode}
+                                isSportMode={isSportMode}
+                                onPartHover={setHoveredPart}
                             />
-                        </mesh>
-                    )}
+                        </Suspense>
 
-                    <ContactShadows
-                        resolution={1024}
-                        scale={15}
-                        blur={2}
-                        opacity={0.65}
-                        far={10}
-                        color={isSportMode ? "#200" : "#000"}
-                    />
+                        <ContactShadows
+                            resolution={1024}
+                            scale={15}
+                            blur={2}
+                            opacity={0.65}
+                            far={10}
+                            color={isSportMode ? "#200" : "#000"}
+                        />
 
-                    <CameraController hoveredPart={hoveredPart} />
-                    <BakeShadows />
-                </Suspense>
-            </Canvas>
+                        <CameraController hoveredPart={hoveredPart} />
+                        <BakeShadows />
+                    </Suspense>
+                </Canvas>
+            </SceneErrorBoundary>
 
             {/* Part Label Overlay */}
             <AnimatePresence>

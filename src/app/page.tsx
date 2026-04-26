@@ -4,12 +4,16 @@ import React, { useState, useCallback, memo } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ExplodedProductCanvas from "@/components/ExplodedProductCanvas";
 import ColorConfigurator from "@/components/ColorConfigurator";
+import Navbar from "@/components/Navbar";
+import DayNightToggle from "@/components/DayNightToggle";
+import { useExperience } from "@/context/ExperienceContext";
+import ExperienceControls from "@/components/ExperienceControls";
+import Motorcycle3D from "@/components/Motorcycle3D";
+import SoundEngine from "@/components/SoundEngine";
 import ImageGallery from "@/components/ImageGallery";
 import CinematicIntro from "@/components/CinematicIntro";
 import InteractiveHotspots from "@/components/InteractiveHotspots";
 import PerformanceSpecs from "@/components/PerformanceSpecs";
-import Navbar from "@/components/Navbar";
-import DayNightToggle from "@/components/DayNightToggle";
 
 /* ──────────────────────────────────────────────────────────
    SCROLL SECTIONS – storytelling text overlays
@@ -44,28 +48,30 @@ const sections = [
 /* ──────────────────────────────────────────────────────────
    TEXT SECTION with scroll-driven opacity/parallax
    ────────────────────────────────────────────────────────── */
-const TextSection = ({ title, subtitle, alignment, range }: {
+const TextSection = ({ title, subtitle, alignment, range, scrollProgress }: {
   title: string;
   subtitle: string;
   alignment: "left" | "center" | "right";
   range: number[];
+  scrollProgress?: any;
 }) => {
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress: localScroll } = useScroll();
+  const progress = scrollProgress || localScroll;
 
   const opacity = useTransform(
-    scrollYProgress,
+    progress,
     [range[0], range[0] + 0.04, range[1] - 0.04, range[1]],
     [0, 1, 1, 0]
   );
 
   const y = useTransform(
-    scrollYProgress,
+    progress,
     [range[0], range[0] + 0.04, range[1] - 0.04, range[1]],
     [40, 0, 0, -40]
   );
 
   const scale = useTransform(
-    scrollYProgress,
+    progress,
     [range[0], range[0] + 0.04, range[1] - 0.04, range[1]],
     [0.97, 1, 1, 0.97]
   );
@@ -98,10 +104,6 @@ const TextSection = ({ title, subtitle, alignment, range }: {
   );
 };
 
-import { useExperience } from "@/context/ExperienceContext";
-import ExperienceControls from "@/components/ExperienceControls";
-import Motorcycle3D from "@/components/Motorcycle3D";
-import SoundEngine from "@/components/SoundEngine";
 
 /* ──────────────────────────────────────────────────────────
    HOME PAGE
@@ -109,7 +111,16 @@ import SoundEngine from "@/components/SoundEngine";
 export default function Home() {
   const [introComplete, setIntroComplete] = useState(false);
   const { isSportMode, isRealMode } = useExperience();
-  const { scrollYProgress } = useScroll();
+  const heroRef = React.useRef<HTMLDivElement>(null);
+
+  // Entire page scroll progress
+  const { scrollYProgress: pageScrollProgress } = useScroll();
+
+  // Hero section local scroll progress
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
@@ -132,14 +143,18 @@ export default function Home() {
       {introComplete && <ExperienceControls />}
 
       {/* ═══ SECTION 1: HERO — Scroll-driven Storytelling ═══ */}
-      <div id="hero" className="relative h-[400vh]">
+      <div id="hero" ref={heroRef} className="relative h-[220vh]">
         {/* Sticky Canvas Background */}
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           {/* Main 3D Experience or Sequence Fallback */}
           <div className="absolute inset-0 z-0">
             {introComplete && (
-              <div className="w-full h-full">
-                <ExplodedProductCanvas frameCount={300} basePath="/images/sequence" />
+              <div className="w-full h-screen">
+                <ExplodedProductCanvas
+                  frameCount={300}
+                  basePath="/images/sequence"
+                  scrollProgress={heroScrollProgress}
+                />
               </div>
             )}
           </div>
@@ -148,8 +163,8 @@ export default function Home() {
           <motion.div
             className="absolute inset-0 pointer-events-none z-[1]"
             style={{
-              y: useTransform(scrollYProgress, [0, 0.2], [0, -100]),
-              opacity: useTransform(scrollYProgress, [0, 0.1], [0.5, 0])
+              y: useTransform(heroScrollProgress, [0, 0.2], [0, -100]),
+              opacity: useTransform(heroScrollProgress, [0, 0.1], [0.5, 0])
             }}
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
@@ -163,36 +178,12 @@ export default function Home() {
               subtitle={section.subtitle}
               alignment={section.alignment}
               range={section.scroll}
+              scrollProgress={heroScrollProgress}
             />
           ))}
-
-          {/* ... Branding and Indicator as before ... */}
         </div>
       </div>
 
-      {/* ═══ SECTION 2: IMMERSIVE 3D EXPLORATION (New) ═══ */}
-      <section className="relative h-[200vh] z-20">
-        <div className="sticky top-0 h-screen w-full bg-black">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full h-full">
-              <Motorcycle3D />
-            </div>
-          </div>
-
-          <div className="absolute top-12 left-1/2 -translate-x-1/2 text-center pointer-events-none z-10">
-            <motion.span
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-[8px] font-mono uppercase tracking-[0.5em] text-[#c8a96e]/60"
-            >
-              Interactive 3D Stage
-            </motion.span>
-            <h2 className="text-4xl md:text-6xl font-black text-white/90 uppercase tracking-tighter mt-2">
-              The Stage is Yours
-            </h2>
-          </div>
-        </div>
-      </section>
 
       {/* ═══ SECTION 2: INTERACTIVE HOTSPOTS ═══ */}
       <section className="relative z-20">
@@ -210,14 +201,14 @@ export default function Home() {
       </section>
 
       {/* ═══ SECTION 5: CINEMATIC SHOWCASE (New) ═══ */}
-      <section className="relative h-[200vh] bg-black overflow-hidden z-20">
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center">
+      <section className="relative h-[100vh] bg-black overflow-hidden z-20">
+        <div className="sticky top-0 min-h-screen w-full flex items-center justify-center">
           {/* Background Video */}
           <motion.div
             className="absolute inset-0 z-0"
             style={{
-              opacity: useTransform(scrollYProgress, [0.72, 0.75, 0.82, 0.85], [0, 1, 1, 0]),
-              scale: useTransform(scrollYProgress, [0.72, 0.85], [1.1, 1])
+              opacity: useTransform(pageScrollProgress, [0.72, 0.75, 0.82, 0.85], [0, 1, 1, 0]),
+              scale: useTransform(pageScrollProgress, [0.72, 0.85], [1.1, 1])
             }}
           >
             <video
@@ -236,8 +227,8 @@ export default function Home() {
           <motion.div
             className="relative z-10 text-center px-6"
             style={{
-              y: useTransform(scrollYProgress, [0.72, 0.85], [100, -100]),
-              opacity: useTransform(scrollYProgress, [0.72, 0.75, 0.82, 0.85], [0, 1, 1, 0])
+              y: useTransform(pageScrollProgress, [0.72, 0.85], [100, -100]),
+              opacity: useTransform(pageScrollProgress, [0.72, 0.75, 0.82, 0.85], [0, 1, 1, 0])
             }}
           >
             <span className="text-[8px] font-mono uppercase tracking-[1em] text-[#c8a96e] block mb-4">
@@ -256,7 +247,7 @@ export default function Home() {
       </section>
 
       {/* ═══ SECTION 6: CTA FOOTER ═══ */}
-      <section className="relative z-20 h-screen bg-[#050505] flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative z-20 min-h-screen bg-[#050505] flex flex-col items-center justify-center overflow-hidden py-24">
         {/* Divider */}
         <div className="section-divider absolute top-0 left-0 right-0" />
 

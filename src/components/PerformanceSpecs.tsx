@@ -79,9 +79,9 @@ function AnimatedNumber({ value, duration = 2 }: { value: number; duration?: num
 
 export default function PerformanceSpecs() {
     return (
-        <section id="performance" className="relative py-24 md:py-40 px-6 md:px-16 lg:px-24 bg-[#050505] overflow-hidden">
+        <section id="performance" className="relative py-20 md:py-32 px-6 md:px-16 lg:px-24 bg-[#050505] overflow-hidden">
             {/* Section Divider */}
-            <div className="section-divider mb-16 md:mb-24" />
+            <div className="section-divider mb-12 md:mb-16" />
 
             {/* Background Number */}
             <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-[0.015]">
@@ -91,7 +91,7 @@ export default function PerformanceSpecs() {
             </div>
 
             {/* Header */}
-            <div className="max-w-5xl mb-14 md:mb-20">
+            <div className="max-w-5xl mb-10 md:mb-16">
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -111,7 +111,7 @@ export default function PerformanceSpecs() {
             </div>
 
             {/* Specs Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-16 md:mb-24">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-12 md:mb-20">
                 {SPECS.map((spec, idx) => (
                     <motion.div
                         key={spec.label}

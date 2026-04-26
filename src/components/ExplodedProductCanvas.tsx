@@ -6,9 +6,10 @@ import { useScroll, useTransform, useMotionValueEvent, motion, AnimatePresence }
 interface ExplodedProductCanvasProps {
     frameCount: number;
     basePath: string;
+    scrollProgress?: any;
 }
 
-const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ frameCount, basePath }) => {
+const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ frameCount, basePath, scrollProgress }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -16,8 +17,9 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
     const [loadingStage, setLoadingStage] = useState("Initializing");
     const lastFrameRef = useRef(-1);
 
-    const { scrollYProgress } = useScroll();
-    const frameIndexValue = useTransform(scrollYProgress, [0, 1], [0, frameCount - 1]);
+    const { scrollYProgress: localScroll } = useScroll();
+    const progress = scrollProgress || localScroll;
+    const frameIndexValue = useTransform(progress, [0, 1], [0, frameCount - 1]);
 
     // Preload images in batches for better performance
     useEffect(() => {

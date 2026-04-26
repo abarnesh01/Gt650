@@ -143,12 +143,12 @@ export default function ImageGallery() {
     }, [selectedIdx]);
 
     return (
-        <section id="gallery" className="relative py-24 md:py-40 px-6 md:px-16 lg:px-24 bg-[#050505]">
+        <section id="gallery" className="relative py-16 md:py-24 px-6 md:px-16 lg:px-24 bg-[#050505]">
             {/* Section Divider */}
-            <div className="section-divider mb-16 md:mb-24" />
+            <div className="section-divider mb-12 md:mb-16" />
 
             {/* Section Header */}
-            <div className="mb-14 md:mb-20 max-w-3xl">
+            <div className="mb-10 md:mb-16 max-w-3xl">
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}

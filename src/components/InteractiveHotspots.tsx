@@ -258,13 +258,13 @@ export default function InteractiveHotspots() {
     }, [activeHotspot, closeHotspot]);
 
     return (
-        <section id="hotspots" className="relative h-screen w-full bg-[#050505] flex items-center justify-center overflow-hidden">
+        <section id="hotspots" className="relative min-h-screen w-full bg-[#050505] flex items-center justify-center overflow-hidden py-20">
             {/* Background image */}
             <div className="absolute inset-0">
                 <img
                     src="/images/british_racing_green.webp"
                     alt="Continental GT 650"
-                    className="w-full h-full object-contain opacity-70"
+                    className="w-full h-full object-cover opacity-70"
                     style={{
                         filter: "brightness(0.6) contrast(1.1)",
                     }}
