@@ -127,7 +127,6 @@ export default function ImageGallery() {
                     </motion.div>
                 ))}
             </div>
-            </div>
 
             {/* Premium Fullscreen Lookbook */}
             <AnimatePresence>
