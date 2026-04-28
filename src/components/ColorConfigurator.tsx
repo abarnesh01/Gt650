@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useExperience } from "@/context/ExperienceContext";
 
 /* ──────────────────────────────────────────────────────────
-   COLOR VARIANTS – each maps to a real high-res product photograph
+   COLOR VARIANTS — Curated for Premium Studio Look
    ────────────────────────────────────────────────────────── */
 const COLORS = [
     {
@@ -12,10 +12,10 @@ const COLORS = [
         id: "green",
         src: "/images/british_racing_green.webp",
         accent: "#2d6b47",
-        glow: "rgba(45,107,71,0.35)",
+        glow: "rgba(45,107,71,0.25)",
         spec: "Classic Heritage",
         description:
-            "The definitive café racer hue. Rich British Racing Green with gold coach-lining, heritage badge.",
+            "The definitive café racer hue. Rich British Racing Green with gold coach-lining and a heritage badge that speaks to a century of racing soul.",
     },
     {
         name: "Rocker Red",
@@ -23,10 +23,10 @@ const COLORS = [
         id: "red",
         src: "/images/rocker_red.webp",
         accent: "#e63946",
-        glow: "rgba(230,57,70,0.30)",
+        glow: "rgba(230,57,70,0.20)",
         spec: "Sports Café",
         description:
-            "Bold, visceral and unapologetic. Race-inspired red with chrome tank rails.",
+            "Bold, visceral and unapologetic. A race-inspired red paired with chrome tank rails for a high-intensity, high-contrast presence.",
     },
     {
         name: "Ventura Storm",
@@ -34,10 +34,10 @@ const COLORS = [
         id: "blue",
         src: "/images/ventura_storm.webp",
         accent: "#457b9d",
-        glow: "rgba(69,123,157,0.30)",
+        glow: "rgba(69,123,157,0.20)",
         spec: "Midnight Tourer",
         description:
-            "Deep oceanic blue with a metallic flake finish. Enigmatic and refined.",
+            "Deep oceanic blue with a metallic flake finish. Enigmatic and refined, it captures the essence of the storm before the calm.",
     },
     {
         name: "Dux Deluxe",
@@ -45,10 +45,10 @@ const COLORS = [
         id: "black",
         src: "/images/dux_deluxe.webp",
         accent: "#3a3a3a",
-        glow: "rgba(58,58,58,0.25)",
+        glow: "rgba(58,58,58,0.15)",
         spec: "Stealth Edition",
         description:
-            "Blacked-out sophistication. Piano black with subtle chrome accents.",
+            "Blacked-out sophistication. Piano black surfaces meet subtle chrome accents for a look that is both stealthy and undeniably premium.",
     },
     {
         name: "Mr Clean",
@@ -56,17 +56,17 @@ const COLORS = [
         id: "chrome",
         src: "/images/mister_clean.webp",
         accent: "#d4d4d4",
-        glow: "rgba(212,212,212,0.20)",
+        glow: "rgba(212,212,212,0.15)",
         spec: "Chrome Signature",
         description:
-            "Full chrome brilliance. Mirror-finish tank with heritage pinstriping.",
+            "The ultimate expression of the café racer. A mirror-finish tank with heritage pinstriping that reflects the world around you.",
     },
 ] as const;
 
 type ColorVariant = (typeof COLORS)[number];
 
 /* ──────────────────────────────────────────────────────────
-   IMAGE PRELOADER – ensures crisp swap, no layout flash
+   IMAGE PRELOADER
    ────────────────────────────────────────────────────────── */
 function usePreloadImages(colors: readonly ColorVariant[]) {
     const [progress, setProgress] = useState(0);
@@ -75,120 +75,67 @@ function usePreloadImages(colors: readonly ColorVariant[]) {
     useEffect(() => {
         let mounted = true;
         let count = 0;
-
-        const promises = colors.map(
-            (c) =>
-                new Promise<void>((resolve) => {
-                    const img = new Image();
-                    img.src = c.src;
-                    img.onload = () => {
-                        count++;
-                        if (mounted) setProgress(Math.round((count / colors.length) * 100));
-                        resolve();
-                    };
-                    img.onerror = () => {
-                        count++;
-                        if (mounted) setProgress(Math.round((count / colors.length) * 100));
-                        resolve();
-                    };
-                })
-        );
-
-        Promise.all(promises).then(() => {
-            if (mounted) setLoaded(true);
-        });
-
-        return () => {
-            mounted = false;
-        };
+        const promises = colors.map((c) => new Promise<void>((resolve) => {
+            const img = new Image();
+            img.src = c.src;
+            img.onload = () => { count++; if (mounted) setProgress(Math.round((count / colors.length) * 100)); resolve(); };
+            img.onerror = () => { count++; if (mounted) setProgress(Math.round((count / colors.length) * 100)); resolve(); };
+        }));
+        Promise.all(promises).then(() => { if (mounted) setLoaded(true); });
+        return () => { mounted = false; };
     }, [colors]);
 
     return { progress, loaded };
 }
 
 /* ──────────────────────────────────────────────────────────
-   PREMIUM COLOR SWATCH
+   PREMIUM COLOR SWATCH — Reimagined as Paint Chips
    ────────────────────────────────────────────────────────── */
-interface SwatchProps {
-    color: ColorVariant;
-    isActive: boolean;
-    onClick: () => void;
-}
-
-function ColorSwatch({ color, isActive, onClick }: SwatchProps) {
+function ColorSwatch({ color, isActive, onClick }: { color: ColorVariant; isActive: boolean; onClick: () => void }) {
     return (
         <button
             onClick={onClick}
-            aria-label={`Select ${color.name}`}
-            className="group relative flex flex-col items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c8a96e]/50 rounded-full"
+            className="group relative flex flex-col items-center focus:outline-none"
         >
-            {/* Outer glow ring */}
             <motion.div
-                className="absolute inset-[-8px] rounded-full"
-                animate={{
-                    opacity: isActive ? 1 : 0,
-                    scale: isActive ? 1 : 0.6,
+                animate={{ 
+                    scale: isActive ? 1.2 : 1,
+                    borderColor: isActive ? "rgba(200, 169, 110, 0.6)" : "rgba(255,255,255,0.1)"
                 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                style={{
-                    border: `1.5px solid ${color.accent}80`,
-                    boxShadow: isActive
-                        ? `0 0 20px ${color.hex}60, 0 0 50px ${color.hex}25`
-                        : "none",
-                }}
-            />
-
-            {/* Swatch dot */}
-            <motion.div
-                animate={{ scale: isActive ? 1.35 : 1 }}
-                whileHover={{ scale: isActive ? 1.35 : 1.15 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full shadow-lg cursor-pointer"
-                style={{
-                    background: `radial-gradient(circle at 35% 30%, ${color.accent}ee, ${color.hex})`,
-                    boxShadow: isActive
-                        ? `0 4px 20px ${color.hex}70, inset 0 2px 4px rgba(255,255,255,0.18)`
-                        : `0 2px 8px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.08)`,
-                    border: `1.5px solid ${isActive ? "rgba(255,255,255,0.30)" : "rgba(255,255,255,0.06)"}`,
-                }}
+                whileHover={{ scale: 1.1 }}
+                className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 p-1.5 transition-colors duration-500"
             >
-                {/* Inner highlight */}
-                <div
-                    className="absolute top-[3px] left-[6px] w-3.5 h-2 rounded-full opacity-35"
-                    style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.7), transparent)" }}
-                />
-                {/* Checkmark */}
+                <div 
+                    className="w-full h-full rounded-full shadow-inner overflow-hidden relative"
+                    style={{ 
+                        background: `radial-gradient(circle at 30% 30%, ${color.accent}, ${color.hex} 80%)`,
+                        boxShadow: isActive ? `0 0 20px ${color.hex}80` : 'none'
+                    }}
+                >
+                    {/* Glossy Reflection on Swatch */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+                </div>
+                
+                {/* Active Indicator Ring */}
                 <AnimatePresence>
                     {isActive && (
-                        <motion.div
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0, opacity: 0 }}
-                            className="absolute inset-0 flex items-center justify-center"
-                        >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                        </motion.div>
+                        <motion.div 
+                            layoutId="swatch-ring"
+                            className="absolute -inset-2 rounded-full border border-[#c8a96e]/30 animate-pulse"
+                        />
                     )}
                 </AnimatePresence>
             </motion.div>
-
-            {/* Tooltip */}
-            <div className="absolute -top-14 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none transform translate-y-2 group-hover:translate-y-0 z-50">
-                <div className="relative">
-                    <span className="text-[8px] font-mono text-white/90 tracking-[0.3em] uppercase whitespace-nowrap bg-black/90 backdrop-blur-xl px-4 py-2 rounded border border-white/10 block shadow-2xl">
-                        {color.name}
-                    </span>
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-black/90 border-r border-b border-white/10 rotate-45" />
-                </div>
-            </div>
+            
+            <span className={`mt-3 text-[7px] font-mono uppercase tracking-[0.3em] transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`}>
+                {color.id}
+            </span>
         </button>
     );
 }
 
 /* ──────────────────────────────────────────────────────────
-   SPECIFICATIONS PANEL — Improved readability
+   SPECS PANEL — Glassmorphism & Readability
    ────────────────────────────────────────────────────────── */
 function SpecsPanel({ color }: { color: ColorVariant }) {
     const specs = [
@@ -200,59 +147,33 @@ function SpecsPanel({ color }: { color: ColorVariant }) {
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="absolute right-6 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30 pointer-events-none hidden md:block"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="absolute right-8 md:right-16 top-1/2 -translate-y-1/2 z-30 hidden lg:block"
         >
-            <div
-                className="rounded-lg p-6 w-72"
-                style={{
-                    background: "rgba(0,0,0,0.75)",
-                    backdropFilter: "blur(40px) saturate(150%)",
-                    WebkitBackdropFilter: "blur(40px) saturate(150%)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    boxShadow: "0 16px 48px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)",
-                }}
-            >
+            <div className="glass-premium p-8 w-80 rounded-2xl">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={color.id}
-                        initial={{ opacity: 0, y: 12 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -12 }}
-                        transition={{ duration: 0.4 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                     >
-                        {/* Color indicator */}
-                        <div className="flex items-center gap-3 mb-4">
-                            <div
-                                className="w-3 h-3 rounded-full ring-2 ring-white/20 shadow-lg"
-                                style={{ backgroundColor: color.hex }}
-                            />
-                            <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#c8a96e]">
-                                {color.spec}
-                            </span>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-4 h-1 bg-[#c8a96e]" />
+                            <span className="text-mono-label text-[#c8a96e] opacity-80">{color.spec}</span>
                         </div>
 
-                        {/* Description */}
-                        <p className="text-sm leading-relaxed text-white/80 mb-6 font-light">
+                        <p className="text-editorial text-sm text-white/80 leading-relaxed mb-8">
                             {color.description}
                         </p>
 
-                        {/* Divider */}
-                        <div className="h-px w-full bg-gradient-to-r from-white/10 via-white/20 to-white/10 mb-6" />
-
-                        {/* Specs */}
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                             {specs.map((s) => (
-                                <div key={s.label} className="flex justify-between items-baseline">
-                                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/50">
-                                        {s.label}
-                                    </span>
-                                    <span className="text-xs font-mono text-white/90 tabular-nums">
-                                        {s.value}
-                                    </span>
+                                <div key={s.label} className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                                    <span className="text-mono-label !text-[8px] opacity-40">{s.label}</span>
+                                    <span className="text-spec text-white/90">{s.value}</span>
                                 </div>
                             ))}
                         </div>
@@ -264,121 +185,56 @@ function SpecsPanel({ color }: { color: ColorVariant }) {
 }
 
 /* ──────────────────────────────────────────────────────────
-   MAIN CONFIGURATOR COMPONENT
+   MAIN COMPONENT
    ────────────────────────────────────────────────────────── */
 export default function ColorConfigurator() {
     const [activeColor, setActiveColor] = useState<ColorVariant>(COLORS[0]);
-    const { bikeParts, setBikePart, isSportMode } = useExperience();
+    const { bikeParts, setBikePart } = useExperience();
     const { progress, loaded } = usePreloadImages(COLORS);
-    const sectionRef = useRef<HTMLElement>(null);
-
-    const customizationOptions = [
-        {
-            label: "Exhaust",
-            options: [
-                { id: "classic", name: "Chrome Classic" },
-                { id: "scrambler", name: "High-Mount Scrambler" },
-                { id: "shorty", name: "Shorty Slash-Cut" },
-            ],
-            active: bikeParts.exhaust,
-            setActive: (val: string) => setBikePart("exhaust", val),
-        },
-        {
-            label: "Seat",
-            options: [
-                { id: "leather", name: "Quilted Brown Leather" },
-                { id: "solo", name: "Single Solo Seat" },
-                { id: "touring", name: "Touring Comfort" },
-            ],
-            active: bikeParts.seat,
-            setActive: (val: string) => setBikePart("seat", val),
-        },
-    ];
-
-    // Keyboard navigation
-    useEffect(() => {
-        const handleKey = (e: KeyboardEvent) => {
-            const idx = COLORS.findIndex((c) => c.id === activeColor.id);
-            if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-                e.preventDefault();
-                setActiveColor(COLORS[(idx + 1) % COLORS.length]);
-            } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-                e.preventDefault();
-                setActiveColor(COLORS[(idx - 1 + COLORS.length) % COLORS.length]);
-            }
-        };
-
-        window.addEventListener("keydown", handleKey);
-        return () => window.removeEventListener("keydown", handleKey);
-    }, [activeColor]);
 
     return (
         <section
-            ref={sectionRef}
             id="configurator"
-            className="relative min-h-screen w-full bg-[#050505] flex flex-col items-center justify-center overflow-hidden"
-            style={{ minHeight: "100vh" }}
+            className="relative min-h-screen w-full bg-[#000000] flex flex-col items-center justify-center overflow-hidden noise-overlay"
         >
-            {/* ── BACKGROUND LAYERS ── */}
-
-            {/* Deep black base */}
-            <div className="absolute inset-0 bg-[#000000] z-0" />
-
-            {/* Subtle color-matched spotlight from above */}
-            <motion.div
-                className="absolute inset-0 pointer-events-none z-[1]"
-                animate={{
-                    background: `radial-gradient(circle at 50% 35%, ${activeColor.glow} 0%, transparent 55%)`,
-                }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-            />
-
-            {/* Watermark – deep behind everything */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.015] select-none z-[2]">
-                <h1 className="text-[25vw] font-black uppercase tracking-[-0.05em] text-white leading-none">
-                    GT 650
-                </h1>
+            {/* ── CINEMATIC LIGHTING ── */}
+            <div className="absolute inset-0 pointer-events-none">
+                {/* Main Top Spotlight */}
+                <motion.div
+                    animate={{ background: `radial-gradient(circle at 50% 30%, ${activeColor.glow} 0%, transparent 60%)` }}
+                    className="absolute inset-0 opacity-60"
+                />
+                {/* Floor Glow */}
+                <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-black via-black/80 to-transparent" />
+                {/* Subtle Horizon Line */}
+                <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-30" />
             </div>
 
             {/* ── HEADER ── */}
-            <div className="absolute top-[6%] sm:top-[8%] md:top-[10%] left-1/2 -translate-x-1/2 text-center z-30 pointer-events-none w-full px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                    viewport={{ once: true }}
-                >
-                    <span className="text-[7px] sm:text-[8px] md:text-[9px] font-mono uppercase tracking-[0.6em] sm:tracking-[0.8em] text-[#c8a96e]/40 block mb-3 sm:mb-4">
-                        Color Configurator
-                    </span>
-                    <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-[-0.04em] text-white/95 uppercase mb-2 sm:mb-3 leading-none">
-                        Signature
-                    </h2>
-                    <div className="h-px w-12 sm:w-16 bg-gradient-to-r from-transparent via-[#c8a96e]/25 to-transparent mx-auto my-3 sm:my-4" />
-                    <p className="max-w-md mx-auto text-[7px] sm:text-[8px] md:text-[10px] font-mono uppercase tracking-[0.3em] sm:tracking-[0.5em] text-white/30 leading-loose">
-                        Real finishes · Studio perfected · Your GT 650
-                    </p>
+            <div className="absolute top-12 left-1/2 -translate-x-1/2 text-center z-30 pointer-events-none px-4">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
+                    <span className="text-mono-label text-[#c8a96e] mb-2 block">Premium Customization</span>
+                    <h2 className="text-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white/95">Signature</h2>
                 </motion.div>
             </div>
 
-            {/* ── CUSTOMIZATION MENU (LEFT PANEL) ── */}
-            <div className="absolute left-4 md:left-10 lg:left-16 top-1/2 -translate-y-1/2 z-30 flex-col gap-8 hidden lg:flex">
-                {customizationOptions.map((group) => (
-                    <div key={group.label} className="flex flex-col gap-3">
-                        <span className="text-[10px] font-mono uppercase tracking-[0.5em] text-white/50 mb-1">
-                            {group.label}
-                        </span>
+            {/* ── CUSTOMIZATION MENU (LEFT) ── */}
+            <div className="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col gap-10">
+                {["Exhaust", "Seat"].map((label) => (
+                    <div key={label} className="space-y-4">
+                        <span className="text-mono-label opacity-40">{label}</span>
                         <div className="flex flex-col gap-2">
-                            {group.options.map((opt) => (
+                            {(label === "Exhaust" ? ["Classic", "Scrambler"] : ["Leather", "Solo"]).map((opt) => (
                                 <button
-                                    key={opt.id}
-                                    onClick={() => group.setActive(opt.id) as any}
-                                    className={`px-5 py-3 rounded border text-[10px] font-mono uppercase tracking-[0.15em] transition-all duration-500 text-left ${group.active === opt.id
-                                            ? "bg-[#c8a96e] border-[#c8a96e] text-black font-bold shadow-[0_0_15px_rgba(200,169,110,0.4)]"
-                                            : "bg-black/40 border-white/10 text-white/70 hover:border-white/30 hover:bg-white/5 hover:text-white"
-                                        }`}
+                                    key={opt}
+                                    onClick={() => setBikePart(label.toLowerCase() as any, opt.toLowerCase())}
+                                    className={`text-[9px] font-mono uppercase tracking-[0.2em] px-5 py-3 border transition-all duration-500 text-left rounded-sm ${
+                                        (bikeParts as any)[label.toLowerCase()] === opt.toLowerCase()
+                                            ? "bg-[#c8a96e] border-[#c8a96e] text-black font-bold"
+                                            : "border-white/10 text-white/50 hover:border-white/30 hover:text-white"
+                                    }`}
                                 >
-                                    {opt.name}
+                                    {opt}
                                 </button>
                             ))}
                         </div>
@@ -386,96 +242,50 @@ export default function ColorConfigurator() {
                 ))}
             </div>
 
-            {/* ── MAIN BIKE DISPLAY ── */}
-            <div className="relative w-full h-[75vh] sm:h-[80vh] md:h-[85vh] flex items-center justify-center z-10">
-                {/* Loading */}
-                <AnimatePresence>
-                    {!loaded && (
-                        <motion.div
-                            initial={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.8 }}
-                            className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#030303]"
-                        >
-                            <div className="relative w-48 h-[2px] bg-white/5 overflow-hidden rounded-full">
-                                <motion.div
-                                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#c8a96e]/70 to-[#c8a96e]"
-                                    animate={{ width: `${progress}%` }}
-                                    transition={{ duration: 0.3 }}
-                                />
+            {/* ── BIKE HERO DISPLAY ── */}
+            <div className="relative w-full max-w-[1400px] h-[60vh] md:h-[80vh] flex items-center justify-center z-10 px-4 md:px-0">
+                <AnimatePresence mode="wait">
+                    {!loaded ? (
+                        <motion.div key="loader" exit={{ opacity: 0 }} className="flex flex-col items-center">
+                            <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+                                <motion.div animate={{ width: `${progress}%` }} className="h-full bg-[#c8a96e]" />
                             </div>
-                            <p className="mt-5 text-[8px] font-mono uppercase tracking-[0.7em] text-white/20">
-                                Loading Finishes · {progress}%
-                            </p>
+                            <span className="text-mono-label mt-4 opacity-20 text-[8px]">Loading Finishes {progress}%</span>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key={activeColor.id}
+                            initial={{ opacity: 0, scale: 0.95, filter: "brightness(0) contrast(2)" }}
+                            animate={{ opacity: 1, scale: 1, filter: "brightness(1.05) contrast(1.15) saturate(1.1)" }}
+                            exit={{ opacity: 0, scale: 1.05 }}
+                            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                            className="relative flex items-center justify-center w-full"
+                        >
+                            {/* Grounding Shadow */}
+                            <div className="absolute bottom-[5%] w-[80%] h-12 bg-black/80 blur-[60px] rounded-[100%] opacity-80" />
+                            
+                            <img
+                                src={activeColor.src}
+                                alt={activeColor.name}
+                                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_50px_40px_rgba(0,0,0,0.9)]"
+                                style={{ imageRendering: "crisp-edges" }}
+                            />
+                            
+                            {/* Cinematic Light Sweep Overlay (triggers on change) */}
+                            <motion.div
+                                initial={{ x: "-100%" }}
+                                animate={{ x: "200%" }}
+                                transition={{ duration: 1.5, ease: "easeInOut" }}
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 pointer-events-none"
+                            />
                         </motion.div>
                     )}
                 </AnimatePresence>
-
-                {/* Bike Image – crisp, full-quality, with crossfade */}
-                <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-                    <AnimatePresence>
-                        <motion.div
-                            key={activeColor.id}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{
-                                duration: 0.8,
-                                ease: "easeInOut",
-                            }}
-                            className="absolute inset-0 flex items-center justify-center"
-                        >
-                            {/* The actual bike image — full quality, responsive sizes, drop shadow */}
-                            <img
-                                src={activeColor.src}
-                                alt={`Continental GT 650 – ${activeColor.name}`}
-                                draggable={false}
-                                className="select-none w-full object-contain pointer-events-auto drop-shadow-[0_40px_30px_rgba(0,0,0,0.8)]"
-                                style={{
-                                    maxWidth: "100%",
-                                    height: "auto",
-                                    maxHeight: "85vh",
-                                    /* Extra responsive constraints to ensure center focus and scale */
-                                    width: "min(100vw, 1100px)",
-                                    imageRendering: "crisp-edges",
-                                    /* Premium image treatment: boost contrast & sharpness for deep blacks and shine */
-                                    filter: "contrast(1.25) saturate(1.15) brightness(1.05)",
-                                }}
-                            />
-                            
-                            {/* Very subtle secondary shadow for grounding */}
-                            <div
-                                className="absolute bottom-[10%] sm:bottom-[15%] md:bottom-[20%] left-1/2 -translate-x-1/2 pointer-events-none"
-                                style={{
-                                    width: "70%",
-                                    maxWidth: "800px",
-                                    height: "12px",
-                                    borderRadius: "50%",
-                                    background: `radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, transparent 70%)`,
-                                    filter: "blur(8px)",
-                                }}
-                            />
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
             </div>
 
-            {/* ── SPECS PANEL (RIGHT) ── */}
-            <SpecsPanel color={activeColor} />
-
-            {/* ── BOTTOM CONTROL BAR ── */}
-            <div className="absolute bottom-4 sm:bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-3 sm:gap-4 md:gap-5 w-full px-4">
-                {/* Swatches */}
-                <div
-                    className="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-7 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full max-w-full overflow-x-auto scrollbar-hide"
-                    style={{
-                        background: "rgba(0,0,0,0.5)",
-                        backdropFilter: "blur(40px) saturate(160%)",
-                        WebkitBackdropFilter: "blur(40px) saturate(160%)",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                        boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
-                    }}
-                >
+            {/* ── BOTTOM CONTROLS ── */}
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-10 w-full">
+                <div className="flex gap-6 sm:gap-10 px-10 py-5 rounded-full glass-premium border-white/5">
                     {COLORS.map((color) => (
                         <ColorSwatch
                             key={color.id}
@@ -486,49 +296,29 @@ export default function ColorConfigurator() {
                     ))}
                 </div>
 
-                {/* Active color label */}
-                <div className="flex flex-col items-center gap-1.5">
+                <div className="text-center space-y-1">
                     <AnimatePresence mode="wait">
-                        <motion.div
+                        <motion.h3
                             key={activeColor.id}
-                            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
-                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                            exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            className="flex flex-col items-center gap-1"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="text-mono-label text-sm sm:text-base tracking-[0.6em] text-white/90"
                         >
-                            <h3 className="text-[11px] sm:text-xs md:text-sm font-mono uppercase tracking-[0.5em] sm:tracking-[0.7em] text-white/90">
-                                {activeColor.name}
-                            </h3>
-                            <span className="text-[7px] sm:text-[8px] font-mono uppercase tracking-[0.5em] text-[#c8a96e]/40">
-                                {activeColor.spec}
-                            </span>
-                        </motion.div>
+                            {activeColor.name}
+                        </motion.h3>
                     </AnimatePresence>
-                    <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/10 to-transparent mt-0.5" />
-
-                    {/* Key hint */}
-                    <p className="text-[7px] font-mono uppercase tracking-[0.4em] text-white/10 mt-0.5 hidden md:block">
-                        ← → Arrow keys to browse
-                    </p>
+                    <div className="w-12 h-[1px] bg-[#c8a96e]/40 mx-auto" />
                 </div>
             </div>
+
+            {/* ── SPECS (RIGHT) ── */}
+            <SpecsPanel color={activeColor} />
 
             {/* ── CORNER BRANDING ── */}
-            <div className="absolute top-6 right-6 md:top-8 md:right-8 z-30 pointer-events-none hidden md:block">
-                <div className="flex items-center gap-3">
-                    <motion.div
-                        className="w-2 h-2 rounded-full ring-1 ring-white/10"
-                        animate={{ backgroundColor: activeColor.hex }}
-                        transition={{ duration: 0.5 }}
-                    />
-                    <span className="text-[8px] font-mono uppercase tracking-[0.4em] text-white/25">
-                        {activeColor.id.toUpperCase()}
-                    </span>
-                </div>
+            <div className="absolute top-12 right-12 hidden lg:block opacity-30">
+                <span className="text-mono-label text-[7px] border border-white/10 px-4 py-2 rounded-full">Continental GT 650 // 2026</span>
             </div>
-
-            {/* Removed Reflective Floor to avoid hazy wash-out look */}
         </section>
     );
 }
