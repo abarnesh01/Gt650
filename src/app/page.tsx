@@ -60,10 +60,10 @@ const TextSection = ({ title, subtitle, alignment, range, scrollProgress }: any)
     >
       <div className="max-w-4xl">
         <span className="text-mono-label text-[#c8a96e] mb-4 block">Royal Enfield // Heritage</span>
-        <h2 className="text-display text-4xl md:text-8xl text-white/95 uppercase mb-6 leading-[0.9]">
+        <h2 className="text-display text-4xl md:text-8xl text-white/95 uppercase mb-4 leading-[0.9]">
           {title}
         </h2>
-        <div className={`h-[1px] w-20 bg-[#c8a96e]/30 mb-6 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto' : ''}`} />
+        <div className={`h-[1px] w-20 bg-[#c8a96e]/30 mb-4 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto' : ''}`} />
         <p className="text-mono-label !text-[10px] opacity-40 max-w-sm">{subtitle}</p>
       </div>
     </motion.div>
