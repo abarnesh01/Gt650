@@ -70,6 +70,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Preload critical images */}
         <link rel="preload" as="image" href="/images/british_racing_green.webp" type="image/webp" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.onerror = function(msg, url, line, col, error) {
+              if (msg.indexOf('ChunkLoadError') > -1 || msg.indexOf('Loading chunk') > -1) {
+                window.location.reload();
+              }
+            };
+          `
+        }} />
       </head>
       <body
         className="min-h-full"

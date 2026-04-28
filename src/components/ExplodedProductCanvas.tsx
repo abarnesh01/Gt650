@@ -154,7 +154,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505]"
+                        className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#000000]"
                     >
                         {/* Subtle vignette */}
                         <div
@@ -267,7 +267,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
             {/* Canvas - with smooth reveal */}
             <motion.canvas
                 ref={canvasRef}
-                className="fixed top-0 left-0 w-full h-full object-contain pointer-events-none"
+                className="absolute top-0 left-0 w-full h-full object-contain pointer-events-none"
                 style={{ width: "100%", height: "100%" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isLoaded ? 1 : 0 }}
