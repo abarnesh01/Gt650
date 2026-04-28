@@ -249,6 +249,5 @@ export default function ColorConfigurator() {
                 </div>
             </div>
         </section>
-        </section>
     );
 }
