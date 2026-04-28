@@ -64,7 +64,7 @@ export default function InteractiveHotspots() {
     const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
 
     return (
-        <section id="hotspots" className="relative min-h-[120vh] w-full bg-[#000000] flex items-center justify-center overflow-hidden py-32">
+        <section id="hotspots" className="relative min-h-screen w-full bg-[#000000] flex items-center justify-center overflow-hidden py-20">
             {/* Cinematic Background - INCREASED VISIBILITY */}
             <div className="absolute inset-0">
                 <img
@@ -78,7 +78,7 @@ export default function InteractiveHotspots() {
             </div>
 
             {/* Branded Labels */}
-            <div className="absolute top-24 left-12 md:left-24 z-10">
+            <div className="absolute top-20 left-12 md:left-24 z-10">
                 <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}>
                     <span className="text-mono-label text-[#c8a96e] mb-4 block">Mechanical Mastery</span>
                     <h2 className="text-display text-4xl md:text-8xl text-white/90">DETAIL.</h2>

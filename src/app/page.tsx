@@ -145,18 +145,21 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6: FOOTER / CTA ── */}
-      <section className="relative z-20 min-h-screen flex flex-col items-center justify-center bg-black py-40">
+      <section className="relative z-20 min-h-[70vh] flex flex-col items-center justify-center bg-black py-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="text-center space-y-12"
+          viewport={{ once: true }}
+          className="text-center space-y-8"
         >
           <span className="text-mono-label text-[#c8a96e]">Begin Your Legend</span>
-          <h2 className="text-display text-5xl md:text-9xl text-white/95">OWN THE <br/><span className="text-white/20">STREETS.</span></h2>
-          <a href="#configurator" className="btn-premium px-16 py-6 inline-block">Configure Now</a>
+          <h2 className="text-display text-5xl md:text-8xl text-white/95 leading-none">OWN THE <br/><span className="text-white/20">STREETS.</span></h2>
+          <div className="pt-8">
+            <a href="#configurator" className="btn-premium px-16 py-6 inline-block">Configure Now</a>
+          </div>
         </motion.div>
         
-        <div className="absolute bottom-12 w-full px-12 flex justify-between text-mono-label !text-[8px] opacity-20">
+        <div className="absolute bottom-10 w-full px-12 flex justify-between text-mono-label !text-[8px] opacity-20">
           <span>Royal Enfield © 2026</span>
           <span>Continental GT 650 // Precision Engineering</span>
         </div>
