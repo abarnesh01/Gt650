@@ -207,13 +207,13 @@ function SpecsPanel({ color }: { color: ColorVariant }) {
             className="absolute right-6 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30 pointer-events-none hidden md:block"
         >
             <div
-                className="rounded-lg p-6 w-60"
+                className="rounded-lg p-6 w-72"
                 style={{
-                    background: "rgba(0,0,0,0.65)",
+                    background: "rgba(0,0,0,0.75)",
                     backdropFilter: "blur(40px) saturate(150%)",
                     WebkitBackdropFilter: "blur(40px) saturate(150%)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    boxShadow: "0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    boxShadow: "0 16px 48px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)",
                 }}
             >
                 <AnimatePresence mode="wait">
@@ -225,32 +225,32 @@ function SpecsPanel({ color }: { color: ColorVariant }) {
                         transition={{ duration: 0.4 }}
                     >
                         {/* Color indicator */}
-                        <div className="flex items-center gap-2.5 mb-4">
+                        <div className="flex items-center gap-3 mb-4">
                             <div
-                                className="w-2.5 h-2.5 rounded-full ring-2 ring-white/10"
+                                className="w-3 h-3 rounded-full ring-2 ring-white/20 shadow-lg"
                                 style={{ backgroundColor: color.hex }}
                             />
-                            <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-[#c8a96e]/80">
+                            <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-[#c8a96e]">
                                 {color.spec}
                             </span>
                         </div>
 
                         {/* Description */}
-                        <p className="text-[11px] leading-relaxed text-white/50 mb-6">
+                        <p className="text-sm leading-relaxed text-white/80 mb-6 font-light">
                             {color.description}
                         </p>
 
                         {/* Divider */}
-                        <div className="h-px w-full bg-gradient-to-r from-white/8 via-white/15 to-white/8 mb-5" />
+                        <div className="h-px w-full bg-gradient-to-r from-white/10 via-white/20 to-white/10 mb-6" />
 
                         {/* Specs */}
-                        <div className="space-y-3.5">
+                        <div className="space-y-4">
                             {specs.map((s) => (
                                 <div key={s.label} className="flex justify-between items-baseline">
-                                    <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-white/35">
+                                    <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/50">
                                         {s.label}
                                     </span>
-                                    <span className="text-[10px] font-mono text-white/75 tabular-nums">
+                                    <span className="text-xs font-mono text-white/90 tabular-nums">
                                         {s.value}
                                     </span>
                                 </div>
@@ -322,24 +322,15 @@ export default function ColorConfigurator() {
             {/* ── BACKGROUND LAYERS ── */}
 
             {/* Deep black base */}
-            <div className="absolute inset-0 bg-[#030303] z-0" />
+            <div className="absolute inset-0 bg-[#000000] z-0" />
 
             {/* Subtle color-matched spotlight from above */}
             <motion.div
                 className="absolute inset-0 pointer-events-none z-[1]"
                 animate={{
-                    background: `radial-gradient(ellipse 70% 55% at 50% 35%, ${activeColor.glow} 0%, transparent 70%)`,
+                    background: `radial-gradient(circle at 50% 35%, ${activeColor.glow} 0%, transparent 55%)`,
                 }}
                 transition={{ duration: 1.2, ease: "easeInOut" }}
-            />
-
-            {/* Secondary bottom spotlight for showroom floor feel */}
-            <motion.div
-                className="absolute inset-0 pointer-events-none z-[1]"
-                animate={{
-                    background: `radial-gradient(ellipse 80% 30% at 50% 85%, rgba(255,255,255,0.02) 0%, transparent 70%)`,
-                }}
-                transition={{ duration: 1.2 }}
             />
 
             {/* Watermark – deep behind everything */}
@@ -374,7 +365,7 @@ export default function ColorConfigurator() {
             <div className="absolute left-4 md:left-10 lg:left-16 top-1/2 -translate-y-1/2 z-30 flex-col gap-8 hidden lg:flex">
                 {customizationOptions.map((group) => (
                     <div key={group.label} className="flex flex-col gap-3">
-                        <span className="text-[9px] font-mono uppercase tracking-[0.5em] text-white/35 mb-1">
+                        <span className="text-[10px] font-mono uppercase tracking-[0.5em] text-white/50 mb-1">
                             {group.label}
                         </span>
                         <div className="flex flex-col gap-2">
@@ -382,9 +373,9 @@ export default function ColorConfigurator() {
                                 <button
                                     key={opt.id}
                                     onClick={() => group.setActive(opt.id) as any}
-                                    className={`px-4 py-2.5 rounded border text-[9px] font-mono uppercase tracking-[0.15em] transition-all duration-500 text-left ${group.active === opt.id
-                                            ? "bg-[#c8a96e]/90 border-[#c8a96e] text-black font-semibold"
-                                            : "bg-white/[0.03] border-white/[0.08] text-white/50 hover:border-white/20 hover:bg-white/[0.05] hover:text-white/70"
+                                    className={`px-5 py-3 rounded border text-[10px] font-mono uppercase tracking-[0.15em] transition-all duration-500 text-left ${group.active === opt.id
+                                            ? "bg-[#c8a96e] border-[#c8a96e] text-black font-bold shadow-[0_0_15px_rgba(200,169,110,0.4)]"
+                                            : "bg-black/40 border-white/10 text-white/70 hover:border-white/30 hover:bg-white/5 hover:text-white"
                                         }`}
                                 >
                                     {opt.name}
@@ -421,62 +412,52 @@ export default function ColorConfigurator() {
                 </AnimatePresence>
 
                 {/* Bike Image – crisp, full-quality, with crossfade */}
-                <div className="relative w-full h-full flex items-center justify-center">
-                    <AnimatePresence mode="wait">
+                <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
+                    <AnimatePresence>
                         <motion.div
                             key={activeColor.id}
-                            initial={{ opacity: 0, scale: 0.97 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 1.02 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             transition={{
-                                duration: 0.6,
-                                ease: [0.16, 1, 0.3, 1],
+                                duration: 0.8,
+                                ease: "easeInOut",
                             }}
                             className="absolute inset-0 flex items-center justify-center"
                         >
-                            {/* Drop shadow under bike */}
-                            <div
-                                className="absolute bottom-[10%] sm:bottom-[12%] md:bottom-[14%] left-1/2 -translate-x-1/2 pointer-events-none"
-                                style={{
-                                    width: "60%",
-                                    maxWidth: "700px",
-                                    height: "8px",
-                                    borderRadius: "50%",
-                                    background: `radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%)`,
-                                    filter: "blur(12px)",
-                                }}
-                            />
-
-                            {/* The actual bike image — full quality, no 3D pipeline degradation */}
+                            {/* The actual bike image — full quality, responsive sizes, drop shadow */}
                             <img
                                 src={activeColor.src}
                                 alt={`Continental GT 650 – ${activeColor.name}`}
                                 draggable={false}
-                                className="select-none"
+                                className="select-none w-full object-contain pointer-events-auto drop-shadow-[0_40px_30px_rgba(0,0,0,0.8)]"
                                 style={{
-                                    width: "auto",
+                                    maxWidth: "100%",
                                     height: "auto",
-                                    maxWidth: "min(85vw, 750px)",
-                                    maxHeight: "min(65vh, 650px)",
-                                    objectFit: "contain",
-                                    imageRendering: "auto",
-                                    /* Premium image treatment: boost contrast & sharpness */
-                                    filter: "contrast(1.12) saturate(1.15) brightness(1.02)",
-                                    /* No blur, no haze */
+                                    maxHeight: "85vh",
+                                    /* Extra responsive constraints to ensure center focus and scale */
+                                    width: "min(100vw, 1100px)",
+                                    imageRendering: "crisp-edges",
+                                    /* Premium image treatment: boost contrast & sharpness for deep blacks and shine */
+                                    filter: "contrast(1.25) saturate(1.15) brightness(1.05)",
+                                }}
+                            />
+                            
+                            {/* Very subtle secondary shadow for grounding */}
+                            <div
+                                className="absolute bottom-[10%] sm:bottom-[15%] md:bottom-[20%] left-1/2 -translate-x-1/2 pointer-events-none"
+                                style={{
+                                    width: "70%",
+                                    maxWidth: "800px",
+                                    height: "12px",
+                                    borderRadius: "50%",
+                                    background: `radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, transparent 70%)`,
+                                    filter: "blur(8px)",
                                 }}
                             />
                         </motion.div>
                     </AnimatePresence>
                 </div>
-
-                {/* Very subtle edge vignette – ONLY at edges, not over the bike */}
-                <div
-                    className="absolute inset-0 pointer-events-none z-[3]"
-                    style={{
-                        background:
-                            "radial-gradient(ellipse 85% 75% at 50% 50%, transparent 50%, rgba(3,3,3,0.85) 100%)",
-                    }}
-                />
             </div>
 
             {/* ── SPECS PANEL (RIGHT) ── */}
@@ -547,14 +528,7 @@ export default function ColorConfigurator() {
                 </div>
             </div>
 
-            {/* ── REFLECTIVE FLOOR (subtle) ── */}
-            <div
-                className="absolute bottom-0 left-0 right-0 h-[25%] pointer-events-none z-[2]"
-                style={{
-                    background:
-                        "linear-gradient(to top, rgba(255,255,255,0.008) 0%, transparent 100%)",
-                }}
-            />
+            {/* Removed Reflective Floor to avoid hazy wash-out look */}
         </section>
     );
 }
