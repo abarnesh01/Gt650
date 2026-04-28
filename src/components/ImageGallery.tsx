@@ -127,32 +127,6 @@ export default function ImageGallery() {
                     </motion.div>
                 ))}
             </div>
-                {GALLERY_IMAGES.map((img, idx) => (
-                    <motion.div
-                        key={img.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: idx * 0.1 }}
-                        viewport={{ once: true }}
-                        onClick={() => setSelectedIdx(idx)}
-                        className={`group relative cursor-pointer border border-white/5 hover:border-[#c8a96e]/40 transition-all duration-700 overflow-hidden ${img.span}`}
-                    >
-                        <GalleryImage
-                            src={img.src}
-                            alt={img.title}
-                            className="w-full h-full object-cover group-hover:scale-105"
-                        />
-                        
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 p-10 flex flex-col justify-end">
-                            <span className="text-mono-label !text-[7px] text-[#c8a96e] mb-2">{img.subtitle}</span>
-                            <h4 className="text-display text-xl text-white/95">{img.title}</h4>
-                        </div>
-                        
-                        <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-100">
-                            <Maximize2 size={20} className="text-[#c8a96e]" />
-                        </div>
-                    </motion.div>
-                ))}
             </div>
 
             {/* Premium Fullscreen Lookbook */}
