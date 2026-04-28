@@ -42,9 +42,13 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
                 setPhase(PHASES.DISSOLVE);
                 setTimeout(skip, 200);
             }, 5000),
+            // FAILSAFE: Force intro to end after 8 seconds no matter what
+            setTimeout(() => {
+                if (!dismissed) skip();
+            }, 8000),
         ];
         return () => timers.forEach(clearTimeout);
-    }, [skip]);
+    }, [skip, dismissed]);
 
     // Keyboard skip
     useEffect(() => {
@@ -63,7 +67,7 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="fixed inset-0 z-[200] bg-black flex items-center justify-center cursor-pointer select-none"
+                    className="fixed inset-0 z-[500] bg-black flex items-center justify-center cursor-pointer select-none"
                     onClick={skip}
                     tabIndex={0}
                 >

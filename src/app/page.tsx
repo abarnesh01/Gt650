@@ -128,10 +128,11 @@ export default function Home() {
 
   return (
     <main
-      className="relative bg-[#050505] noise-overlay"
+      className="relative bg-[#000000] min-h-screen"
       data-mode={isSportMode ? "sport" : "eco"}
       data-env={isRealMode ? "real" : "studio"}
     >
+      <div className="noise-overlay absolute inset-0 pointer-events-none z-10" />
       <SoundEngine />
       {/* Cinematic Intro */}
       <CinematicIntro onComplete={handleIntroComplete} />
@@ -216,6 +217,7 @@ export default function Home() {
               muted
               loop
               playsInline
+              poster="/images/british_racing_green.webp"
               className="w-full h-full object-cover brightness-50"
             >
               <source src="https://assets.mixkit.co/videos/preview/mixkit-motorcyclist-riding-on-a-highway-at-sunset-10557-large.mp4" type="video/mp4" />
