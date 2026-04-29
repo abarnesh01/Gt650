@@ -145,23 +145,43 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6: FOOTER / CTA ── */}
-      <section className="relative z-20 min-h-[70vh] flex flex-col items-center justify-center bg-black py-20">
+      <section className="relative z-20 min-h-[60vh] flex flex-col items-center justify-center bg-[#050505] py-20 px-6 overflow-hidden">
+        {/* Subtle Background Accent */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-[#c8a96e]/5 blur-[120px] rounded-full pointer-events-none" />
+        
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center space-y-8"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+          className="text-center relative z-10"
         >
-          <span className="text-mono-label text-[#c8a96e]">Begin Your Legend</span>
-          <h2 className="text-display text-5xl md:text-8xl text-white/95 leading-none">OWN THE <br/><span className="text-white/20">STREETS.</span></h2>
-          <div className="pt-8">
-            <a href="#configurator" className="btn-premium px-16 py-6 inline-block">Configure Now</a>
+          <span className="text-mono-label text-[#c8a96e] mb-8 block tracking-[1em] opacity-60">Begin Your Legend</span>
+          <h2 className="text-display text-6xl md:text-9xl text-white/95 leading-none mb-12">
+            OWN THE <br />
+            <span className="text-white/5 italic">STREETS.</span>
+          </h2>
+          
+          <div className="flex flex-col items-center gap-6">
+            <a href="#configurator" className="btn-premium group relative">
+              <span className="relative z-10">Configure Your GT650</span>
+              <div className="absolute inset-0 bg-[#c8a96e] opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-700" />
+            </a>
+            <p className="text-mono-label !text-[7px] text-white/20 tracking-[0.4em]">Starting from £6,599</p>
           </div>
         </motion.div>
         
-        <div className="absolute bottom-10 w-full px-12 flex justify-between text-mono-label !text-[8px] opacity-20">
-          <span>Royal Enfield © 2026</span>
-          <span>Continental GT 650 // Precision Engineering</span>
+        {/* Fine-print Footer */}
+        <div className="absolute bottom-10 w-full px-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-4 opacity-20">
+          <div className="flex items-center gap-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#c8a96e]" />
+            <span className="text-mono-label !text-[7px] tracking-[0.3em]">Royal Enfield © 2026</span>
+          </div>
+          <div className="flex gap-8">
+            <span className="text-mono-label !text-[7px] tracking-[0.3em]">Privacy Policy</span>
+            <span className="text-mono-label !text-[7px] tracking-[0.3em]">Terms of Sale</span>
+            <span className="text-mono-label !text-[7px] tracking-[0.3em]">Continental GT 650 // Precision Engineering</span>
+          </div>
         </div>
       </section>
     </main>
