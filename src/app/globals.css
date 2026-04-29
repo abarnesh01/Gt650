@@ -17,9 +17,10 @@
   --border-hover: rgba(255, 255, 255, 0.15);
   --accent-gold: #c8a96e;
   --accent-gold-dim: rgba(200, 169, 110, 0.15);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-cinematic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.03);
 }
 
 /* Day Mode Overrides */
@@ -320,12 +321,12 @@ a {
 }
 
 .glass-premium {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(60px) saturate(180%);
-  -webkit-backdrop-filter: blur(60px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4),
-    0 0 0 0.5px rgba(255, 255, 255, 0.06) inset;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -333,15 +334,15 @@ a {
    ═══════════════════════════════════════════════════════════ */
 .text-display {
   font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
+  letter-spacing: -0.05em;
+  line-height: 0.85;
   text-transform: uppercase;
 }
 
 .text-mono-label {
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
-  font-size: 9px;
-  letter-spacing: 0.5em;
+  font-size: 8px;
+  letter-spacing: 0.6em;
   text-transform: uppercase;
 }
 
@@ -497,31 +498,19 @@ a {
   color: var(--accent-gold);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.4em;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.6s var(--ease-out-expo);
   text-decoration: none;
   display: inline-block;
-}
-
-.btn-premium::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(200, 169, 110, 0.1), rgba(200, 169, 110, 0.05));
-  transform: translateY(100%);
-  transition: transform 0.6s var(--ease-out-expo);
-}
-
-.btn-premium:hover::before {
-  transform: translateY(0);
+  backdrop-filter: blur(10px);
 }
 
 .btn-premium:hover {
-  border-color: rgba(200, 169, 110, 0.5);
-  box-shadow: 0 0 30px rgba(200, 169, 110, 0.1),
-    0 0 60px rgba(200, 169, 110, 0.05);
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 40px var(--accent-gold-dim);
+  color: white;
 }
 
 .btn-premium:active {

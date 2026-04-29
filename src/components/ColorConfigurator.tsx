@@ -139,30 +139,31 @@ export default function ColorConfigurator() {
 
             {/* ── MAIN BIKE STAGE ── */}
             <div className="relative w-full max-w-[1400px] h-[40vh] md:h-[55vh] flex items-center justify-center z-20">
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence mode="wait">
                     <motion.div
                         key={activeColor.id}
-                        initial={{ opacity: 0, scale: 0.9, y: 20, filter: "brightness(0) contrast(2)" }}
-                        animate={{ opacity: 1, scale: 1, y: 0, filter: "brightness(1.1) contrast(1.1) saturate(1.1)" }}
-                        exit={{ opacity: 0, scale: 1.05, filter: "brightness(2) blur(10px)" }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, scale: 0.95, rotateY: -10, filter: "brightness(0.5) blur(10px)" }}
+                        animate={{ opacity: 1, scale: 1, rotateY: 0, filter: "brightness(1.1) blur(0px)" }}
+                        exit={{ opacity: 0, scale: 1.05, rotateY: 10, filter: "brightness(1.5) blur(20px)" }}
+                        transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
                         className="absolute inset-0 flex items-center justify-center"
+                        style={{ perspective: "1000px" }}
                     >
                         {/* Ground Shadow with Rim Light Falloff */}
-                        <div className="absolute bottom-[5%] w-[60%] h-8 bg-black blur-[40px] opacity-80" />
+                        <div className="absolute bottom-[5%] w-[60%] h-8 bg-black/60 blur-[40px]" />
                         
                         <img
                             src={activeColor.src}
                             alt={activeColor.name}
-                            className="w-full h-full object-contain pointer-events-none drop-shadow-[0_30px_40px_rgba(0,0,0,0.8)]"
+                            className="w-full h-full object-contain pointer-events-none drop-shadow-[0_30px_60px_rgba(0,0,0,0.8)]"
                         />
                         
                         {/* Subtle Rim Light Sweep */}
                         <motion.div
-                            initial={{ x: "-150%" }}
-                            animate={{ x: "200%" }}
-                            transition={{ duration: 2, ease: "easeInOut", delay: 0.2 }}
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-[#c8a96e]/5 to-transparent skew-x-12 pointer-events-none"
+                            initial={{ x: "-100%" }}
+                            animate={{ x: "100%" }}
+                            transition={{ duration: 1.5, ease: "easeInOut", delay: 0.1 }}
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent skew-x-[-20deg] pointer-events-none"
                         />
                     </motion.div>
                 </AnimatePresence>
@@ -172,76 +173,88 @@ export default function ColorConfigurator() {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={isRevealed ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1, delay: 1 }}
-                        className="glass-premium p-8 w-64 rounded-sm border-white/5 relative overflow-hidden group"
+                        transition={{ duration: 1, delay: 0.5 }}
+                        className="glass-premium p-8 w-72 rounded-sm relative overflow-hidden group"
                     >
-                        <div className="absolute top-0 left-0 w-1 h-full bg-[#c8a96e]/40 group-hover:bg-[#c8a96e] transition-all duration-700" />
+                        <div className="absolute top-0 left-0 w-1 h-full bg-[#c8a96e]/30 group-hover:bg-[#c8a96e] transition-all duration-700" />
                         
                         <div className="space-y-4">
                             {SPECS.map((s, i) => (
-                                <div key={s.label} className="flex justify-between items-baseline border-b border-white/5 pb-2">
+                                <div key={s.label} className="flex justify-between items-baseline border-b border-white/5 pb-2 relative overflow-hidden">
                                     <span className="text-mono-label !text-[6px] opacity-30">{s.label}</span>
-                                    <span className="text-spec !text-[9px] text-white/80">{s.value}</span>
+                                    <span className="text-spec !text-[10px] text-white/90">{s.value}</span>
+                                    {/* Gold Divider Highlight on Hover */}
+                                    <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#c8a96e]/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-700" />
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-6 pt-4 border-t border-white/5">
-                            <span className="text-mono-label !text-[6px] opacity-20 block mb-2">Technical Specification</span>
-                            <div className="w-6 h-[1px] bg-[#c8a96e]/40" />
+                        <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+                            <span className="text-mono-label !text-[7px] text-[#c8a96e]/60">Master Series</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#c8a96e]/40 animate-pulse" />
                         </div>
                     </motion.div>
                 </div>
             </div>
 
             {/* ── BOTTOM CONTROLS & TAGLINE ── */}
-            <div className="relative z-40 mt-8 flex flex-col items-center gap-8">
+            <div className="relative z-40 mt-12 flex flex-col items-center gap-10">
                 {/* Dynamic Tagline */}
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={activeColor.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="text-center"
-                    >
-                        <h4 className="text-mono-label text-[#c8a96e] mb-1 tracking-[0.5em]">{activeColor.name.toUpperCase()}</h4>
-                        <p className="text-editorial text-[10px] text-white/50 tracking-wide">{activeColor.tagline}</p>
-                    </motion.div>
-                </AnimatePresence>
+                <div className="h-20 flex flex-col items-center justify-center overflow-hidden">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={activeColor.id}
+                            initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                            exit={{ opacity: 0, y: -20, filter: "blur(5px)" }}
+                            transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+                            className="text-center"
+                        >
+                            <h4 className="text-mono-label text-[#c8a96e] mb-2 tracking-[0.8em] font-medium">{activeColor.name.toUpperCase()}</h4>
+                            <p className="text-editorial text-[11px] text-white/40 tracking-widest">{activeColor.tagline}</p>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
 
                 {/* Swatch Selector */}
-                <div className="flex gap-6 p-3 bg-black/40 backdrop-blur-3xl rounded-full border border-white/5 shadow-[0_15px_40px_rgba(0,0,0,0.5)]">
+                <div className="flex gap-8 p-4 bg-black/20 backdrop-blur-3xl rounded-full border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
                     {COLORS.map((color) => (
                         <button
                             key={color.id}
                             onClick={() => setActiveColor(color)}
-                            className="relative group"
+                            className="relative group outline-none"
                         >
                             <motion.div
                                 whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
                                 animate={{ 
-                                    scale: activeColor.id === color.id ? 1.15 : 1,
-                                    borderColor: activeColor.id === color.id ? "#c8a96e" : "rgba(255,255,255,0.1)"
+                                    scale: activeColor.id === color.id ? 1.2 : 1,
+                                    borderColor: activeColor.id === color.id ? "#c8a96e" : "rgba(255,255,255,0.15)"
                                 }}
-                                className="w-8 h-8 rounded-full border-2 p-1 transition-all duration-500"
+                                className="w-10 h-10 rounded-full border-[1.5px] p-1.5 transition-all duration-500 bg-black/20"
                             >
                                 <div 
-                                    className="w-full h-full rounded-full shadow-inner"
-                                    style={{ background: `radial-gradient(circle at 30% 30%, ${color.accent}, ${color.hex})` }}
+                                    className="w-full h-full rounded-full shadow-lg"
+                                    style={{ 
+                                        background: `linear-gradient(135deg, ${color.accent}, ${color.hex})`,
+                                        boxShadow: activeColor.id === color.id ? `0 0 15px ${color.glow}` : "none"
+                                    }}
                                 />
                             </motion.div>
                             
-                            {/* Hover Glow */}
-                            <div className="absolute -inset-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                                style={{ boxShadow: `0 0 15px ${color.glow}` }}
-                            />
-                            
-                            {/* Selected Luxury Ring */}
+                            {/* Hover Reveal Label */}
+                            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                <span className="text-[6px] text-mono-label text-white/40 whitespace-nowrap">{color.name}</span>
+                            </div>
+
+                            {/* Selected Pulse Ring */}
                             {activeColor.id === color.id && (
                                 <motion.div
                                     layoutId="selected-ring"
-                                    className="absolute -inset-2 rounded-full border border-[#c8a96e]/30 animate-pulse-glow"
+                                    className="absolute -inset-2.5 rounded-full border border-[#c8a96e]/20"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.4 }}
                                 />
                             )}
                         </button>
