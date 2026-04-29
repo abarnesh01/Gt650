@@ -63,7 +63,7 @@ function AnimatedNumber({ value }: { value: number }) {
     }, [isInView, value, motionValue]);
 
     useEffect(() => {
-        springValue.on("change", (latest) => {
+        return springValue.on("change", (latest) => {
             if (ref.current) {
                 ref.current.textContent = Math.floor(latest).toString();
             }

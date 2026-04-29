@@ -54,7 +54,7 @@ const GalleryImage = memo(({ src, alt, className }: { src: string; alt: string; 
     
     // Fallback timer to ensure visibility if onLoad doesn't fire
     useEffect(() => {
-        const timer = setTimeout(() => setLoaded(true), 2000);
+        const timer = setTimeout(() => setLoaded(true), 500);
         return () => clearTimeout(timer);
     }, []);
 
