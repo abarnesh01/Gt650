@@ -91,70 +91,70 @@ export default function PerformanceSpecs() {
                 {/* Header Section */}
                 <div className="max-w-3xl mb-8 md:mb-12">
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
                         viewport={{ once: true }}
                     >
-                        <span className="text-mono-label text-[#c8a96e] mb-4 block">Performance Engineering</span>
-                        <h2 className="text-display text-5xl md:text-8xl text-white/95 mb-8">
-                            Pure <br />
-                            <span className="text-white/20">Velocity.</span>
+                        <span className="text-mono-label text-[#c8a96e] mb-4 block tracking-[0.8em]">Performance Engineering</span>
+                        <h2 className="text-display text-5xl md:text-8xl text-white/95 mb-6">
+                            PURE <br />
+                            <span className="text-white/10">VELOCITY.</span>
                         </h2>
-                        <div className="h-px w-24 bg-gradient-to-r from-[#c8a96e] to-transparent" />
+                        <div className="h-px w-20 bg-gradient-to-r from-[#c8a96e]/40 to-transparent" />
                     </motion.div>
                 </div>
 
                 {/* Specs Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-1 tracking-tighter mb-12 md:mb-16">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-0 tracking-tighter mb-12 md:mb-16 border-y border-white/5 bg-white/[0.01]">
                     {SPECS.map((spec, idx) => (
                         <motion.div
                             key={spec.label}
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.19, 1, 0.22, 1] }}
                             viewport={{ once: true }}
-                            className="group relative p-8 md:p-12 border border-white/[0.03] hover:bg-white/[0.02] transition-colors duration-700"
+                            className="group relative p-10 md:p-14 border-x border-white/5 hover:bg-white/[0.02] transition-colors duration-700"
                         >
-                            <div className="flex items-baseline gap-2 mb-4">
-                                <span className="text-4xl md:text-7xl font-black text-white/95 tracking-tighter">
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-5xl md:text-7xl font-black text-white/95 tracking-tighter">
                                     <AnimatedNumber value={spec.value} />
                                 </span>
-                                <span className="text-mono-label text-[#c8a96e] !text-[10px] md:!text-xs">
+                                <span className="text-mono-label text-[#c8a96e] !text-[9px] opacity-60">
                                     {spec.unit}
                                 </span>
                             </div>
                             <div className="space-y-1">
-                                <p className="text-mono-label !text-[8px] opacity-40">{spec.label}</p>
-                                <p className="text-mono-label !text-[7px] opacity-20">{spec.sublabel}</p>
+                                <p className="text-mono-label !text-[8px] text-[#c8a96e] tracking-[0.4em] mb-1">{spec.label.toUpperCase()}</p>
+                                <p className="text-editorial text-[10px] text-white/20 font-light">{spec.sublabel}</p>
                             </div>
                             
-                            {/* Corner Accent */}
-                            <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-[#c8a96e]/0 group-hover:border-[#c8a96e]/30 transition-all duration-700" />
+                            {/* Premium Rim Highlight */}
+                            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#c8a96e]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         </motion.div>
                     ))}
                 </div>
 
                 {/* Detailed Features */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
                     {FEATURES.map((feature, idx) => (
                         <motion.div
                             key={feature.title}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: idx * 0.1 }}
+                            transition={{ duration: 1, delay: idx * 0.1, ease: [0.19, 1, 0.22, 1] }}
                             viewport={{ once: true }}
                             className="group"
                         >
-                            <div className="flex gap-6">
+                            <div className="flex gap-8">
                                 <div className="flex-shrink-0 mt-1">
-                                    <div className="w-10 h-[1px] bg-[#c8a96e]/40 group-hover:w-16 group-hover:bg-[#c8a96e] transition-all duration-500" />
+                                    <div className="w-12 h-[1px] bg-[#c8a96e]/20 group-hover:w-16 group-hover:bg-[#c8a96e]/60 transition-all duration-700" />
                                 </div>
                                 <div className="space-y-4">
-                                    <h3 className="text-mono-label text-sm text-white/90 group-hover:text-[#c8a96e] transition-colors duration-500">
+                                    <h3 className="text-mono-label text-[10px] text-white/80 group-hover:text-[#c8a96e] transition-colors duration-500 tracking-[0.3em]">
                                         {feature.title}
                                     </h3>
-                                    <p className="text-editorial text-sm md:text-base text-white/40 leading-relaxed group-hover:text-white/60 transition-colors duration-500">
+                                    <p className="text-editorial text-sm md:text-base text-white/30 font-light leading-relaxed group-hover:text-white/50 transition-colors duration-500">
                                         {feature.description}
                                     </p>
                                 </div>
