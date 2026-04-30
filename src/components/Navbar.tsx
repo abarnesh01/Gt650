@@ -26,52 +26,56 @@ export default function Navbar() {
         <>
             <motion.nav
                 className={`fixed top-0 left-0 right-0 z-[80] transition-all duration-700 ${scrolled
-                        ? "bg-black/60 backdrop-blur-2xl border-b border-white/[0.04]"
+                        ? "bg-black/80 backdrop-blur-3xl border-b border-white/[0.04]"
                         : "bg-transparent"
                     }`}
                 initial={{ y: -80, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-                <div className="max-w-7xl mx-auto px-4 md:px-12 py-3.5 md:py-4 flex items-center justify-between">
-                    {/* Brand */}
-                    <div className="flex items-center gap-2.5 md:gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#c8a96e]/60" />
-                        <span className="text-[8px] md:text-[9px] font-mono uppercase tracking-[0.5em] md:tracking-[0.6em] text-white/40">
-                            Royal Enfield
+                <div className="container max-w-[1440px] h-20 md:h-24 flex items-center justify-between">
+                    {/* Brand - Left */}
+                    <div className="flex-1 flex items-center gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#c8a96e]" />
+                        <span className="text-[10px] font-mono uppercase tracking-[0.6em] text-white/60">
+                            RE // GT650
                         </span>
                     </div>
 
-                    {/* Desktop Nav Links */}
-                    <div className="hidden md:flex items-center gap-10">
+                    {/* Desktop Nav Links - Center */}
+                    <div className="hidden lg:flex items-center justify-center gap-12 flex-1">
                         {navItems.map((item) => (
                             <a
                                 key={item.label}
                                 href={item.href}
-                                className="text-[9px] font-mono uppercase tracking-[0.4em] text-white/30 hover:text-white/80 transition-colors duration-400 relative group"
+                                className="text-[10px] font-mono uppercase tracking-[0.4em] text-white/40 hover:text-white transition-colors duration-500 relative group"
                             >
                                 {item.label}
-                                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#c8a96e]/40 group-hover:w-full transition-all duration-500" />
+                                <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#c8a96e] group-hover:w-full transition-all duration-500" />
                             </a>
                         ))}
                     </div>
 
-                    {/* Desktop CTA */}
-                    <a
-                        href="#configurator"
-                        className="hidden md:inline-block text-[8px] font-mono uppercase tracking-[0.4em] text-[#c8a96e]/60 hover:text-[#c8a96e] transition-all duration-400 border border-[#c8a96e]/15 hover:border-[#c8a96e]/30 px-5 py-2.5 rounded-sm hover:shadow-[0_0_20px_rgba(200,169,110,0.08)]"
-                    >
-                        Configure
-                    </a>
+                    {/* Desktop CTA - Right */}
+                    <div className="hidden lg:flex flex-1 justify-end items-center gap-8">
+                        <a
+                            href="#configurator"
+                            className="text-[9px] font-mono uppercase tracking-[0.4em] text-[#c8a96e] hover:text-white transition-all duration-500 border border-[#c8a96e]/20 hover:border-[#c8a96e] px-6 py-3 rounded-sm"
+                        >
+                            Reserve Now
+                        </a>
+                    </div>
 
                     {/* Mobile Menu Button */}
-                    <button
-                        onClick={() => setMobileOpen(!mobileOpen)}
-                        className="md:hidden w-10 h-10 flex items-center justify-center text-white/40 hover:text-white/80 transition-colors"
-                        aria-label="Toggle menu"
-                    >
-                        {mobileOpen ? <X size={18} strokeWidth={1.5} /> : <Menu size={18} strokeWidth={1.5} />}
-                    </button>
+                    <div className="lg:hidden flex items-center">
+                        <button
+                            onClick={() => setMobileOpen(!mobileOpen)}
+                            className="w-12 h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                            aria-label="Toggle menu"
+                        >
+                            {mobileOpen ? <X size={20} strokeWidth={1} /> : <Menu size={20} strokeWidth={1} />}
+                        </button>
+                    </div>
                 </div>
             </motion.nav>
 

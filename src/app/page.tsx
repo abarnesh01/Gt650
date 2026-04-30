@@ -83,7 +83,7 @@ export default function Home() {
   const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   return (
-    <main className="relative bg-[#000000] text-white selection:bg-[#c8a96e]/30">
+    <main className="relative bg-[#000000] text-white selection:bg-[#c8a96e]/30 overflow-x-hidden">
       <div className="noise-overlay fixed inset-0 pointer-events-none z-[100] opacity-20" />
       <SoundEngine />
       <CinematicIntro onComplete={handleIntroComplete} />
@@ -110,9 +110,11 @@ export default function Home() {
           </div>
           
           {/* Story Overlays */}
-          {sections.map((s, i) => (
-            <TextSection key={i} {...s} scrollProgress={scrollYProgress} />
-          ))}
+          <div className="container relative h-full pointer-events-none">
+            {sections.map((s, i) => (
+              <TextSection key={i} {...s} scrollProgress={scrollYProgress} />
+            ))}
+          </div>
 
           {/* Bottom Fade to Next Section */}
           <motion.div 
@@ -122,10 +124,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ── SECTION 2: INTERACTIVE DISCOVERY ── */}
-      <div className="relative z-20 -mt-[100vh]">
-         {/* Offset to start hotspots right when hero ends */}
-         <div className="h-screen pointer-events-none" /> 
+      {/* ── SECTION 2: INTERACTIVE DISCOVERY (DETAIL) ── */}
+      <div id="hotspots" className="relative z-20">
          <InteractiveHotspots />
       </div>
 
@@ -145,39 +145,41 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6: FOOTER / CTA ── */}
-      <section className="relative z-20 min-h-[60vh] flex flex-col items-center justify-center bg-[#050505] py-20 px-6 overflow-hidden">
+      <section className="relative z-20 min-h-[70vh] flex flex-col items-center justify-center bg-[#050505] py-24 overflow-hidden">
         {/* Subtle Background Accent */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-[#c8a96e]/5 blur-[120px] rounded-full pointer-events-none" />
         
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-          className="text-center relative z-10"
-        >
-          <span className="text-mono-label text-[#c8a96e] mb-8 block tracking-[1em] opacity-60">Begin Your Legend</span>
-          <h2 className="text-display text-6xl md:text-9xl text-white/95 leading-none mb-12">
-            OWN THE <br />
-            <span className="text-white/5 italic">STREETS.</span>
-          </h2>
-          
-          <div className="flex flex-col items-center gap-6">
-            <a href="#configurator" className="btn-premium group relative">
-              <span className="relative z-10">Configure Your GT650</span>
-              <div className="absolute inset-0 bg-[#c8a96e] opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-700" />
-            </a>
-            <p className="text-mono-label !text-[7px] text-white/20 tracking-[0.4em]">Starting from £6,599</p>
-          </div>
-        </motion.div>
+        <div className="container relative z-10 flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+            className="text-center"
+          >
+            <span className="text-mono-label text-[#c8a96e] mb-8 block tracking-[1em] opacity-60">Begin Your Legend</span>
+            <h2 className="text-display text-6xl md:text-9xl text-white/95 leading-none mb-12">
+              OWN THE <br />
+              <span className="text-white/5 italic">STREETS.</span>
+            </h2>
+            
+            <div className="flex flex-col items-center gap-6">
+              <a href="#configurator" className="btn-premium group relative">
+                <span className="relative z-10">Configure Your GT650</span>
+                <div className="absolute inset-0 bg-[#c8a96e] opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-700" />
+              </a>
+              <p className="text-mono-label !text-[7px] text-white/20 tracking-[0.4em]">Starting from £6,599</p>
+            </div>
+          </motion.div>
+        </div>
         
         {/* Fine-print Footer */}
-        <div className="absolute bottom-10 w-full px-8 md:px-16 flex flex-col md:flex-row justify-between items-center gap-4 opacity-20">
+        <div className="absolute bottom-10 w-full px-6 md:px-10 xl:px-16 flex flex-col md:flex-row justify-between items-center gap-6 opacity-20">
           <div className="flex items-center gap-4">
             <div className="w-1.5 h-1.5 rounded-full bg-[#c8a96e]" />
             <span className="text-mono-label !text-[7px] tracking-[0.3em]">Royal Enfield © 2026</span>
           </div>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
             <span className="text-mono-label !text-[7px] tracking-[0.3em]">Privacy Policy</span>
             <span className="text-mono-label !text-[7px] tracking-[0.3em]">Terms of Sale</span>
             <span className="text-mono-label !text-[7px] tracking-[0.3em]">Continental GT 650 // Precision Engineering</span>
