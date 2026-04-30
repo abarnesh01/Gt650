@@ -62,104 +62,123 @@ const HOTSPOTS: HotspotData[] = [
 
 export default function InteractiveHotspots() {
     const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e;
+        const x = (clientX / window.innerWidth) - 0.5;
+        const y = (clientY / window.innerHeight) - 0.5;
+        setMousePosition({ x, y });
+    };
 
     return (
-        <section id="hotspots" className="relative min-h-screen w-full bg-[#000000] flex items-center justify-center overflow-hidden py-24 md:py-32">
+        <section 
+            id="hotspots" 
+            onMouseMove={handleMouseMove}
+            className="relative min-h-screen w-full bg-[#000000] flex items-center justify-center overflow-hidden py-24"
+        >
             {/* ── CINEMATIC SHOWCASE BACKGROUND ── */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <motion.div
-                    initial={{ scale: 1.1, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 2, ease: "easeOut" }}
+                    animate={{ 
+                        scale: 1.05 + mousePosition.x * 0.02,
+                        x: mousePosition.x * 20,
+                        y: mousePosition.y * 20
+                    }}
+                    transition={{ type: "spring", stiffness: 50, damping: 30 }}
                     className="absolute inset-0"
                 >
                     <img
                         src="/images/british_racing_green.webp"
                         alt="Continental GT 650 Engineering Showcase"
-                        className="w-full h-full object-cover opacity-90"
-                        style={{ filter: "brightness(0.7) contrast(1.1) saturate(0.8) sharpness(1.2)" }}
+                        className="w-full h-full object-cover opacity-80"
+                        style={{ filter: "brightness(0.8) contrast(1.15) saturate(0.9) sharpness(1.4)" }}
                     />
                 </motion.div>
                 
-                {/* Directional Side Lighting & Gradients */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-80" />
+                {/* Luxury Gradients & Lighting */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(200,169,110,0.05)_0%,transparent_50%)]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-90" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
                 
-                {/* Moving Light / Smoke Effect */}
+                {/* Moving Cinematic Light / Smoke */}
                 <motion.div
                     animate={{ 
-                        x: ["-20%", "20%"],
-                        opacity: [0.1, 0.2, 0.1]
+                        x: ["-10%", "10%"],
+                        opacity: [0.05, 0.15, 0.05]
                     }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.05)_0%,transparent_50%)]"
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.03)_0%,transparent_60%)] blur-3xl"
                 />
             </div>
 
-            {/* ── HEADER (Engineering Aesthetic) ── */}
-            <div className="absolute top-20 left-12 md:left-24 z-20">
+            {/* ── HEADER ── */}
+            <div className="absolute top-24 left-12 md:left-24 z-20">
                 <motion.div 
-                    initial={{ opacity: 0, x: -40 }} 
+                    initial={{ opacity: 0, x: -60 }} 
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+                    transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
                     viewport={{ once: true }}
                 >
                     <div className="flex items-center gap-4 mb-4">
-                        <div className="h-px w-8 bg-[#c8a96e]" />
-                        <span className="text-mono-label text-[#c8a96e] tracking-[0.6em] uppercase font-bold">Mechanical Mastery</span>
+                        <motion.div 
+                            initial={{ width: 0 }}
+                            whileInView={{ width: 40 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            className="h-[1px] bg-[#c8a96e]" 
+                        />
+                        <span className="text-mono-label text-[#c8a96e] tracking-[0.8em] uppercase font-bold text-[10px]">Mechanical Mastery</span>
                     </div>
-                    <h2 className="text-display text-6xl md:text-9xl text-white/95 tracking-tighter leading-none">
+                    <h2 className="text-display text-7xl md:text-[10rem] text-white/95 tracking-tightest leading-none mb-4">
                         DETAIL.
                     </h2>
                 </motion.div>
             </div>
 
             {/* ── INTERACTIVE HOTSPOT NODES ── */}
-            <div className="relative w-full max-w-[1500px] aspect-video z-10">
+            <div className="relative w-full max-w-[1600px] aspect-video z-10">
                 {HOTSPOTS.map((hs, idx) => (
                     <motion.div
                         key={hs.id}
                         initial={{ opacity: 0, scale: 0 }}
                         whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, delay: 0.6 + idx * 0.15, ease: [0.19, 1, 0.22, 1] }}
+                        transition={{ duration: 1, delay: 0.8 + idx * 0.2, ease: [0.19, 1, 0.22, 1] }}
                         viewport={{ once: true }}
                         className="absolute"
                         style={{ left: hs.x, top: hs.y }}
                     >
                         <button
                             onClick={() => setActiveHotspot(hs)}
-                            className="relative group p-8 -m-8 focus:outline-none"
+                            className="relative group p-12 -m-12 focus:outline-none"
                         >
                             <div className="relative flex items-center justify-center">
                                 {/* Luxury Outer Rings */}
                                 <motion.div
-                                    animate={{ scale: [1, 2.2, 1], opacity: [0.4, 0, 0.4] }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute inset-0 w-16 h-16 -m-8 border border-[#c8a96e]/20 rounded-full"
+                                    animate={{ scale: [1, 2.5, 1], opacity: [0.3, 0, 0.3] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute inset-0 w-20 h-20 -m-10 border border-[#c8a96e]/20 rounded-full"
                                 />
                                 <motion.div
-                                    animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.5, 0.2] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                    className="absolute inset-0 w-12 h-12 -m-6 border border-white/10 rounded-full"
+                                    animate={{ scale: [1.3, 1, 1.3], opacity: [0.1, 0.4, 0.1] }}
+                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                                    className="absolute inset-0 w-14 h-14 -m-7 border border-white/5 rounded-full"
                                 />
                                 
                                 {/* Core Node */}
-                                <div className="relative w-7 h-7 rounded-full glass-premium flex items-center justify-center border-[#c8a96e]/40 shadow-[0_0_30px_rgba(200,169,110,0.4)] group-hover:scale-125 group-hover:border-[#c8a96e] transition-all duration-500">
-                                    <div className="w-2 h-2 bg-[#c8a96e] rounded-full group-hover:animate-ping" />
+                                <div className="relative w-8 h-8 rounded-full glass-premium flex items-center justify-center border-[#c8a96e]/30 shadow-[0_0_40px_rgba(200,169,110,0.3)] group-hover:scale-125 group-hover:border-[#c8a96e] transition-all duration-700">
+                                    <div className="w-2.5 h-2.5 bg-[#c8a96e] rounded-full group-hover:scale-150 transition-transform duration-500" />
                                 </div>
                                 
                                 {/* Label Reveal */}
-                                <div className="absolute top-1/2 left-full ml-6 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none translate-x-4 group-hover:translate-x-0">
-                                    <div className="bg-black/60 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-sm flex items-center gap-3">
-                                        <div className="w-1 h-1 bg-[#c8a96e] rounded-full" />
-                                        <span className="text-mono-label !text-[8px] text-white/80 tracking-[0.4em] whitespace-nowrap">{hs.label.toUpperCase()}</span>
+                                <div className="absolute top-1/2 left-full ml-8 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-1000 pointer-events-none translate-x-4 group-hover:translate-x-0">
+                                    <div className="bg-black/80 backdrop-blur-2xl border border-white/10 px-5 py-2.5 rounded-sm flex items-center gap-4">
+                                        <div className="w-1.5 h-[1px] bg-[#c8a96e]" />
+                                        <span className="text-mono-label !text-[9px] text-white/90 tracking-[0.5em] whitespace-nowrap font-bold">{hs.label.toUpperCase()}</span>
                                     </div>
                                 </div>
 
                                 {/* Animated Connector line */}
-                                <motion.div 
-                                    className="absolute top-1/2 left-1/2 w-0 h-[1px] bg-gradient-to-r from-[#c8a96e]/50 to-transparent origin-left opacity-0 group-hover:opacity-100 group-hover:w-16 transition-all duration-700"
-                                />
+                                <div className="absolute top-1/2 left-1/2 w-0 h-[1px] bg-gradient-to-r from-[#c8a96e]/40 to-transparent origin-left opacity-0 group-hover:opacity-100 group-hover:w-20 transition-all duration-1000" />
                             </div>
                         </button>
                     </motion.div>
@@ -173,58 +192,68 @@ export default function InteractiveHotspots() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[1000] flex items-center justify-center p-6 md:p-20 bg-black/98 backdrop-blur-2xl"
+                        className="fixed inset-0 z-[1000] flex items-center justify-center p-6 md:p-12 bg-black/95 backdrop-blur-3xl"
                         onClick={() => setActiveHotspot(null)}
                     >
                         <motion.div
-                            initial={{ scale: 0.9, y: 50, opacity: 0 }}
+                            initial={{ scale: 0.95, y: 100, opacity: 0 }}
                             animate={{ scale: 1, y: 0, opacity: 1 }}
-                            exit={{ scale: 0.9, y: 50, opacity: 0 }}
-                            transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-                            className="relative max-w-7xl w-full glass-premium rounded-sm overflow-hidden flex flex-col lg:flex-row shadow-[0_60px_150px_rgba(0,0,0,1)] border-white/10"
+                            exit={{ scale: 0.95, y: 100, opacity: 0 }}
+                            transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+                            className="relative max-w-6xl w-full glass-premium rounded-sm overflow-hidden flex flex-col md:flex-row shadow-[0_80px_200px_rgba(0,0,0,1)] border-white/5"
                             onClick={(e) => e.stopPropagation()}
                         >
+                            <div className="absolute inset-0 border border-[#c8a96e]/10 pointer-events-none" />
+                            
                             <button 
                                 onClick={() => setActiveHotspot(null)} 
-                                className="absolute top-10 right-10 z-20 text-white/20 hover:text-white transition-all duration-500 hover:rotate-90"
+                                className="absolute top-8 right-8 z-20 text-white/10 hover:text-white/60 transition-all duration-700 hover:rotate-90"
                             >
-                                <X size={48} strokeWidth={0.5} />
+                                <X size={40} strokeWidth={0.5} />
                             </button>
 
                             {/* Info Card Image */}
-                            <div className="w-full lg:w-1/2 aspect-square relative bg-black overflow-hidden group">
+                            <div className="w-full md:w-[45%] aspect-square md:aspect-auto relative bg-black overflow-hidden group">
                                 <motion.img
-                                    initial={{ scale: 1.2, filter: "grayscale(1) brightness(0.5)" }}
-                                    animate={{ scale: 1, filter: "grayscale(0) brightness(1)" }}
-                                    transition={{ duration: 2, ease: "easeOut" }}
+                                    initial={{ scale: 1.15, filter: "brightness(0.4)" }}
+                                    animate={{ scale: 1, filter: "brightness(1)" }}
+                                    transition={{ duration: 2.5, ease: "easeOut" }}
                                     src={activeHotspot.image}
                                     alt={activeHotspot.title}
-                                    className="w-full h-full object-cover opacity-90 transition-transform duration-[4s] group-hover:scale-110"
+                                    className="w-full h-full object-cover opacity-80"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/20 to-transparent" />
-                                <div className="absolute bottom-10 left-10 flex items-center gap-4 opacity-40">
-                                    <div className="w-8 h-px bg-white" />
-                                    <span className="text-mono-label !text-[8px] text-white tracking-[0.5em]">COMPONENT ARCHIVE</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent md:hidden" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                                
+                                <div className="absolute bottom-10 left-10 flex items-center gap-4 opacity-30">
+                                    <div className="w-10 h-[1px] bg-white" />
+                                    <span className="text-mono-label !text-[8px] text-white tracking-[0.6em]">RE-650 ARCHIVE</span>
                                 </div>
                             </div>
 
                             {/* Info Card Content */}
-                            <div className="flex-1 p-12 md:p-24 flex flex-col justify-center relative">
-                                <div className="absolute top-10 left-10 w-20 h-20 border-t border-l border-[#c8a96e]/20" />
+                            <div className="flex-1 p-12 md:p-20 flex flex-col justify-center relative">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-[#c8a96e]/5 blur-[80px] rounded-full" />
                                 
-                                <span className="text-mono-label text-[#c8a96e] mb-8 block uppercase tracking-[0.8em] font-bold">Engineering Detail</span>
-                                <h3 className="text-display text-4xl md:text-8xl text-white/95 mb-10 tracking-tight leading-none">{activeHotspot.title}</h3>
+                                <span className="text-mono-label text-[#c8a96e] mb-6 block uppercase tracking-[0.8em] font-bold text-[10px]">Technical Detail</span>
+                                <h3 className="text-display text-4xl md:text-7xl text-white/95 mb-8 tracking-tight leading-none">{activeHotspot.title}</h3>
                                 
-                                <p className="text-editorial text-sm md:text-lg text-white/40 leading-relaxed mb-16 max-w-lg font-light">
+                                <p className="text-editorial text-sm md:text-base text-white/40 leading-relaxed mb-12 max-w-md font-light tracking-wide">
                                     {activeHotspot.description}
                                 </p>
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
-                                    {activeHotspot.specs.map((spec) => (
-                                        <div key={spec.label} className="border-b border-white/5 pb-4">
-                                            <span className="text-mono-label !text-[8px] text-[#c8a96e]/60 block mb-3 tracking-[0.3em]">{spec.label.toUpperCase()}</span>
-                                            <span className="text-spec text-white/90 font-medium tracking-widest">{spec.value}</span>
-                                        </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
+                                    {activeHotspot.specs.map((spec, i) => (
+                                        <motion.div 
+                                            key={spec.label}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.5 + i * 0.1 }}
+                                            className="border-b border-white/5 pb-4"
+                                        >
+                                            <span className="text-mono-label !text-[8px] text-[#c8a96e]/60 block mb-2 tracking-[0.4em] font-bold">{spec.label.toUpperCase()}</span>
+                                            <span className="text-spec text-white/80 font-bold tracking-[0.15em] text-[10px]">{spec.value}</span>
+                                        </motion.div>
                                     ))}
                                 </div>
                             </div>
@@ -234,14 +263,14 @@ export default function InteractiveHotspots() {
             </AnimatePresence>
 
             {/* Bottom Branded Detail */}
-            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 z-10">
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 z-10 pointer-events-none">
                 <motion.div
-                    animate={{ y: [0, 10, 0] }}
+                    animate={{ y: [0, 8, 0] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                     className="flex flex-col items-center gap-4"
                 >
-                    <div className="w-px h-12 bg-gradient-to-b from-[#c8a96e] to-transparent opacity-40" />
-                    <span className="text-mono-label !text-[9px] text-[#c8a96e] uppercase tracking-[1.5em] opacity-30 font-medium">Explore Components</span>
+                    <div className="w-[1px] h-16 bg-gradient-to-b from-[#c8a96e] to-transparent opacity-40" />
+                    <span className="text-mono-label !text-[10px] text-[#c8a96e] uppercase tracking-[1.5em] opacity-40 font-bold">Explore Components</span>
                 </motion.div>
             </div>
         </section>
