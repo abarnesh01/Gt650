@@ -71,17 +71,6 @@ export default function InteractiveHotspots() {
         setMousePosition({ x, y });
     };
 
-export default function InteractiveHotspots() {
-    const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const { clientX, clientY } = e;
-        const x = (clientX / window.innerWidth) - 0.5;
-        const y = (clientY / window.innerHeight) - 0.5;
-        setMousePosition({ x, y });
-    };
-
     return (
         <section 
             id="hotspots" 
