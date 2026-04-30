@@ -71,118 +71,122 @@ export default function InteractiveHotspots() {
         setMousePosition({ x, y });
     };
 
+export default function InteractiveHotspots() {
+    const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e;
+        const x = (clientX / window.innerWidth) - 0.5;
+        const y = (clientY / window.innerHeight) - 0.5;
+        setMousePosition({ x, y });
+    };
+
     return (
         <section 
             id="hotspots" 
             onMouseMove={handleMouseMove}
-            className="relative min-h-screen w-full bg-[#000000] flex items-center justify-center overflow-hidden py-24"
+            className="relative bg-[#000000] py-24 md:py-32 overflow-hidden"
         >
-            {/* ── CINEMATIC SHOWCASE BACKGROUND ── */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                <motion.div
-                    animate={{ 
-                        scale: 1.05 + mousePosition.x * 0.02,
-                        x: mousePosition.x * 20,
-                        y: mousePosition.y * 20
-                    }}
-                    transition={{ type: "spring", stiffness: 50, damping: 30 }}
-                    className="absolute inset-0"
-                >
-                    <img
-                        src="/images/british_racing_green.webp"
-                        alt="Continental GT 650 Engineering Showcase"
-                        className="w-full h-full object-cover opacity-80"
-                        style={{ filter: "brightness(0.8) contrast(1.15) saturate(0.9) sharpness(1.4)" }}
-                    />
-                </motion.div>
-                
-                {/* Luxury Gradients & Lighting */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(200,169,110,0.05)_0%,transparent_50%)]" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-90" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-                
-                {/* Moving Cinematic Light / Smoke */}
-                <motion.div
-                    animate={{ 
-                        x: ["-10%", "10%"],
-                        opacity: [0.05, 0.15, 0.05]
-                    }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.03)_0%,transparent_60%)] blur-3xl"
-                />
-            </div>
-
-            {/* ── HEADER ── */}
-            <div className="absolute top-24 left-12 md:left-24 z-20">
-                <motion.div 
-                    initial={{ opacity: 0, x: -60 }} 
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
-                    viewport={{ once: true }}
-                >
-                    <div className="flex items-center gap-4 mb-4">
-                        <motion.div 
-                            initial={{ width: 0 }}
-                            whileInView={{ width: 40 }}
-                            transition={{ duration: 1, delay: 0.5 }}
-                            className="h-[1px] bg-[#c8a96e]" 
-                        />
-                        <span className="text-mono-label text-[#c8a96e] tracking-[0.8em] uppercase font-bold text-[10px]">Mechanical Mastery</span>
-                    </div>
-                    <h2 className="text-display text-7xl md:text-[10rem] text-white/95 tracking-tightest leading-none mb-4">
-                        DETAIL.
-                    </h2>
-                </motion.div>
-            </div>
-
-            {/* ── INTERACTIVE HOTSPOT NODES ── */}
-            <div className="relative w-full max-w-[1600px] aspect-video z-10">
-                {HOTSPOTS.map((hs, idx) => (
-                    <motion.div
-                        key={hs.id}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, delay: 0.8 + idx * 0.2, ease: [0.19, 1, 0.22, 1] }}
+            <div className="container relative z-10">
+                {/* ── HEADER ── */}
+                <div className="mb-16 md:mb-24">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -60 }} 
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
                         viewport={{ once: true }}
-                        className="absolute"
-                        style={{ left: hs.x, top: hs.y }}
                     >
-                        <button
-                            onClick={() => setActiveHotspot(hs)}
-                            className="relative group p-12 -m-12 focus:outline-none"
-                        >
-                            <div className="relative flex items-center justify-center">
-                                {/* Luxury Outer Rings */}
-                                <motion.div
-                                    animate={{ scale: [1, 2.5, 1], opacity: [0.3, 0, 0.3] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute inset-0 w-20 h-20 -m-10 border border-[#c8a96e]/20 rounded-full"
-                                />
-                                <motion.div
-                                    animate={{ scale: [1.3, 1, 1.3], opacity: [0.1, 0.4, 0.1] }}
-                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                    className="absolute inset-0 w-14 h-14 -m-7 border border-white/5 rounded-full"
-                                />
-                                
-                                {/* Core Node */}
-                                <div className="relative w-8 h-8 rounded-full glass-premium flex items-center justify-center border-[#c8a96e]/30 shadow-[0_0_40px_rgba(200,169,110,0.3)] group-hover:scale-125 group-hover:border-[#c8a96e] transition-all duration-700">
-                                    <div className="w-2.5 h-2.5 bg-[#c8a96e] rounded-full group-hover:scale-150 transition-transform duration-500" />
-                                </div>
-                                
-                                {/* Label Reveal */}
-                                <div className="absolute top-1/2 left-full ml-8 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-1000 pointer-events-none translate-x-4 group-hover:translate-x-0">
-                                    <div className="bg-black/80 backdrop-blur-2xl border border-white/10 px-5 py-2.5 rounded-sm flex items-center gap-4">
-                                        <div className="w-1.5 h-[1px] bg-[#c8a96e]" />
-                                        <span className="text-mono-label !text-[9px] text-white/90 tracking-[0.5em] whitespace-nowrap font-bold">{hs.label.toUpperCase()}</span>
-                                    </div>
-                                </div>
-
-                                {/* Animated Connector line */}
-                                <div className="absolute top-1/2 left-1/2 w-0 h-[1px] bg-gradient-to-r from-[#c8a96e]/40 to-transparent origin-left opacity-0 group-hover:opacity-100 group-hover:w-20 transition-all duration-1000" />
-                            </div>
-                        </button>
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="h-[1px] w-12 bg-[#c8a96e]" />
+                            <span className="text-mono-label text-[#c8a96e] tracking-[0.8em] uppercase font-bold text-[10px]">Mechanical Mastery</span>
+                        </div>
+                        <h2 className="text-display text-5xl md:text-8xl lg:text-[10rem] text-white/95 tracking-tightest leading-none">
+                            DETAIL.
+                        </h2>
                     </motion.div>
-                ))}
+                </div>
+
+                {/* ── INTERACTIVE AREA ── */}
+                <div className="relative w-full aspect-video md:aspect-[21/9] lg:aspect-video glass-premium rounded-sm overflow-hidden border border-white/5">
+                    {/* ── CINEMATIC SHOWCASE BACKGROUND ── */}
+                    <div className="absolute inset-0 z-0">
+                        <motion.div
+                            animate={{ 
+                                scale: 1.05 + mousePosition.x * 0.02,
+                                x: mousePosition.x * 20,
+                                y: mousePosition.y * 20
+                            }}
+                            transition={{ type: "spring", stiffness: 50, damping: 30 }}
+                            className="absolute inset-0"
+                        >
+                            <img
+                                src="/images/british_racing_green.webp"
+                                alt="Continental GT 650 Engineering Showcase"
+                                className="w-full h-full object-cover opacity-60 md:opacity-80"
+                                style={{ filter: "brightness(0.8) contrast(1.15) saturate(0.9) sharpness(1.4)" }}
+                            />
+                        </motion.div>
+                        
+                        {/* Luxury Gradients & Lighting */}
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(200,169,110,0.05)_0%,transparent_50%)]" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-90" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+                    </div>
+
+                    {/* ── INTERACTIVE HOTSPOT NODES ── */}
+                    <div className="absolute inset-0 z-10">
+                        {HOTSPOTS.map((hs, idx) => (
+                            <motion.div
+                                key={hs.id}
+                                initial={{ opacity: 0, scale: 0 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 1, delay: 0.8 + idx * 0.2, ease: [0.19, 1, 0.22, 1] }}
+                                viewport={{ once: true }}
+                                className="absolute"
+                                style={{ left: hs.x, top: hs.y }}
+                            >
+                                <button
+                                    onClick={() => setActiveHotspot(hs)}
+                                    className="relative group p-12 -m-12 focus:outline-none"
+                                >
+                                    <div className="relative flex items-center justify-center">
+                                        {/* Luxury Outer Rings */}
+                                        <motion.div
+                                            animate={{ scale: [1, 2.5, 1], opacity: [0.3, 0, 0.3] }}
+                                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                            className="absolute inset-0 w-20 h-20 -m-10 border border-[#c8a96e]/20 rounded-full"
+                                        />
+                                        
+                                        {/* Core Node */}
+                                        <div className="relative w-8 h-8 rounded-full glass-premium flex items-center justify-center border-[#c8a96e]/30 shadow-[0_0_40px_rgba(200,169,110,0.3)] group-hover:scale-125 group-hover:border-[#c8a96e] transition-all duration-700">
+                                            <div className="w-2.5 h-2.5 bg-[#c8a96e] rounded-full group-hover:scale-150 transition-transform duration-500" />
+                                        </div>
+                                        
+                                        {/* Label Reveal */}
+                                        <div className="absolute top-1/2 left-full ml-8 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-1000 pointer-events-none translate-x-4 group-hover:translate-x-0">
+                                            <div className="bg-black/90 backdrop-blur-2xl border border-white/10 px-5 py-2.5 rounded-sm">
+                                                <span className="text-mono-label !text-[9px] text-white/90 tracking-[0.5em] whitespace-nowrap font-bold">{hs.label.toUpperCase()}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Bottom Branding Detail */}
+                <div className="mt-16 flex flex-col items-center gap-6 pointer-events-none">
+                    <motion.div
+                        animate={{ y: [0, 8, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="flex flex-col items-center gap-4"
+                    >
+                        <div className="w-[1px] h-20 bg-gradient-to-b from-[#c8a96e] to-transparent opacity-40" />
+                        <span className="text-mono-label !text-[10px] text-[#c8a96e] uppercase tracking-[1.5em] opacity-40 font-bold">Explore Components</span>
+                    </motion.div>
+                </div>
             </div>
 
             {/* ── INFO OVERLAY (Luxury Info Card) ── */}
