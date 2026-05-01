@@ -18,28 +18,24 @@ import { useExperience } from "@/context/ExperienceContext";
    ────────────────────────────────────────────────────────── */
 const sections = [
   {
-    id: "hero",
     title: "Continental GT 650",
     subtitle: "The Legend of the Café Racer",
-    alignment: "hero" as const,
+    alignment: "center" as const,
     range: [0, 0.15],
   },
   {
-    id: "precision",
     title: "Engineered Precision",
     subtitle: "Every component polished to perfection",
     alignment: "left" as const,
     range: [0.25, 0.4],
   },
   {
-    id: "engine",
     title: "648cc Parallel Twin",
     subtitle: "Air-oil cooled • 47 HP • 270° firing order",
     alignment: "right" as const,
     range: [0.5, 0.65],
   },
   {
-    id: "heritage",
     title: "Built to Perfection",
     subtitle: "Order your slice of heritage",
     alignment: "center" as const,
@@ -51,34 +47,24 @@ const TextSection = ({ title, subtitle, alignment, range, scrollProgress }: any)
   const opacity = useTransform(scrollProgress, [range[0], range[0] + 0.05, range[1] - 0.05, range[1]], [0, 1, 1, 0]);
   const y = useTransform(scrollProgress, [range[0], range[0] + 0.05, range[1] - 0.05, range[1]], [40, 0, 0, -40]);
   
+  const alignmentClasses = {
+    left: "items-start text-left pl-12 md:pl-32",
+    center: "items-center text-center",
+    right: "items-end text-right pr-12 md:pr-32",
+  };
+
   return (
     <motion.div
       style={{ opacity, y }}
-      className="fixed inset-0 flex flex-col justify-center pointer-events-none z-10"
+      className={`fixed inset-0 flex flex-col justify-center pointer-events-none z-10 px-6 ${alignmentClasses[alignment as keyof typeof alignmentClasses]}`}
     >
-      <div className="container mx-auto px-6 xl:px-16 pt-24 pb-16">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
-          <div className={`col-span-full ${
-            alignment === 'hero' ? 'lg:col-span-6' : 
-            alignment === 'left' ? 'lg:col-span-5' : 
-            alignment === 'right' ? 'lg:col-span-5 lg:col-start-8 text-right items-end' : 
-            'lg:col-span-8 lg:col-start-3 text-center items-center'
-          } flex flex-col`}>
-            <div className={`max-w-2xl pointer-events-auto ${alignment === 'center' ? 'mx-auto' : ''}`}>
-              <span className="text-mono-label text-[#c8a96e] mb-4 block">Royal Enfield // Heritage</span>
-              <h2 className="text-display text-5xl md:text-8xl text-white/95 uppercase mb-6 leading-[0.9] max-w-lg">
-                {title}
-              </h2>
-              <div className={`h-[1px] w-20 bg-[#c8a96e]/30 mb-6 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto' : ''}`} />
-              <p className="text-mono-label !text-[10px] opacity-40 max-w-sm mb-10">{subtitle}</p>
-              {alignment === 'hero' && (
-                <a href="#configurator" className="btn-premium inline-block">
-                  Explore Legend
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
+      <div className="max-w-4xl">
+        <span className="text-mono-label text-[#c8a96e] mb-4 block">Royal Enfield // Heritage</span>
+        <h2 className="text-display text-4xl md:text-8xl text-white/95 uppercase mb-4 leading-[0.9]">
+          {title}
+        </h2>
+        <div className={`h-[1px] w-20 bg-[#c8a96e]/30 mb-4 ${alignment === 'center' ? 'mx-auto' : alignment === 'right' ? 'ml-auto' : ''}`} />
+        <p className="text-mono-label !text-[10px] opacity-40 max-w-sm">{subtitle}</p>
       </div>
     </motion.div>
   );
@@ -97,7 +83,7 @@ export default function Home() {
   const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   return (
-    <main className="relative bg-[#000000] text-white selection:bg-[#c8a96e]/30 overflow-x-hidden">
+    <main className="relative bg-[#000000] text-white selection:bg-[#c8a96e]/30">
       <div className="noise-overlay fixed inset-0 pointer-events-none z-[100] opacity-20" />
       <SoundEngine />
       <CinematicIntro onComplete={handleIntroComplete} />
@@ -110,7 +96,7 @@ export default function Home() {
       )}
 
       {/* ── SECTION 1: HERO SCROLL STORY ── */}
-      <div ref={containerRef} id="hero" className="relative h-[400vh]">
+      <div ref={containerRef} className="relative h-[400vh]">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           {/* Main 3D Sequence */}
           <div className="absolute inset-0 z-0">
@@ -149,12 +135,12 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4: CONFIGURATOR ── */}
-      <section id="configurator" className="relative z-20">
+      <section className="relative z-20">
         <ColorConfigurator />
       </section>
 
       {/* ── SECTION 5: GALLERY ── */}
-      <section id="gallery" className="relative z-20">
+      <section className="relative z-20">
         <ImageGallery />
       </section>
 

@@ -84,76 +84,62 @@ export default function ImageGallery() {
     const prev = useCallback(() => setSelectedIdx((prev) => (prev! - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length), []);
 
     return (
-        <section id="gallery" className="relative pt-20 pb-24 bg-[#000000]">
-            <div className="container mx-auto px-6 xl:px-16">
-                {/* Header */}
-                <div className="mb-16">
+        <section id="gallery" className="relative py-20 px-6 md:px-24 bg-[#000000]">
+            {/* Header */}
+            <div className="mb-16 max-w-5xl">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    <span className="text-mono-label text-[#c8a96e] mb-4 block">Visual Archive</span>
+                    <h2 className="text-display text-5xl md:text-8xl text-white/95">GALLERY.</h2>
+                    <div className="h-px w-24 bg-gradient-to-r from-[#c8a96e] to-transparent mt-6" />
+                </motion.div>
+            </div>
+
+            {/* Masonry Bento Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-[300px] md:auto-rows-[400px] gap-4">
+                {GALLERY_IMAGES.map((img, idx) => (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        key={img.id}
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        transition={{ 
+                            duration: 1.2, 
+                            delay: idx * 0.1,
+                            ease: [0.19, 1, 0.22, 1]
+                        }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        onClick={() => setSelectedIdx(idx)}
+                        className={`group relative cursor-pointer overflow-hidden border border-white/5 transition-all duration-700 ${img.span}`}
                     >
-                        <span className="text-mono-label text-[#c8a96e] mb-4 block">Visual Archive</span>
-                        <h2 className="text-display text-5xl md:text-8xl text-white/95">GALLERY.</h2>
-                        <div className="h-px w-24 bg-gradient-to-r from-[#c8a96e] to-transparent mt-6" />
-                    </motion.div>
-                </div>
-
-                {/* Masonry Bento Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[300px] md:auto-rows-[350px] gap-4">
-                    {GALLERY_IMAGES.map((img, idx) => {
-                        // Desktop spans for 2 large + 2 medium + 2 wide
-                        const spans = [
-                            "md:col-span-8 md:row-span-2", // Large 1
-                            "md:col-span-4 md:row-span-1", // Medium 1
-                            "md:col-span-4 md:row-span-1", // Medium 2
-                            "md:col-span-6 md:row-span-1", // Wide 1
-                            "md:col-span-6 md:row-span-1", // Wide 2
-                            "md:col-span-12 md:row-span-2", // Large 2 (Panoramic)
-                        ];
+                        <GalleryImage
+                            src={img.src}
+                            alt={img.title}
+                            className="w-full h-full object-cover transition-transform duration-[3s] ease-out group-hover:scale-110"
+                        />
                         
-                        return (
+                        {/* Elite Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 p-8 flex flex-col justify-end">
                             <motion.div
-                                key={img.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ 
-                                    duration: 1.2, 
-                                    delay: idx * 0.1,
-                                    ease: [0.19, 1, 0.22, 1]
-                                }}
-                                viewport={{ once: true, margin: "-50px" }}
-                                onClick={() => setSelectedIdx(idx)}
-                                className={`group relative cursor-pointer overflow-hidden border border-white/5 transition-all duration-700 rounded-xl ${spans[idx] || "md:col-span-4"}`}
+                                initial={{ opacity: 0, y: 10 }}
+                                whileHover={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
                             >
-                                <GalleryImage
-                                    src={img.src}
-                                    alt={img.title}
-                                    className="w-full h-full object-cover transition-transform duration-[3s] ease-out group-hover:scale-110"
-                                />
-                                
-                                {/* Elite Overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 p-8 flex flex-col justify-end">
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        whileHover={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                        <span className="text-mono-label !text-[7px] text-[#c8a96e] mb-2 block tracking-[0.4em]">{img.subtitle}</span>
-                                        <h4 className="text-display text-xl text-white/95 tracking-tight">{img.title}</h4>
-                                    </motion.div>
-                                </div>
-                                
-                                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-2 group-hover:translate-y-0 scale-90 group-hover:scale-100">
-                                    <Maximize2 size={16} className="text-[#c8a96e]/60" />
-                                </div>
-
-                                {/* Subtle Rim Light on Hover */}
-                                <div className="absolute inset-0 border border-[#c8a96e]/0 group-hover:border-[#c8a96e]/10 transition-all duration-700" />
+                                <span className="text-mono-label !text-[7px] text-[#c8a96e] mb-2 block tracking-[0.4em]">{img.subtitle}</span>
+                                <h4 className="text-display text-xl text-white/95 tracking-tight">{img.title}</h4>
                             </motion.div>
-                        );
-                    })}
-                </div>
+                        </div>
+                        
+                        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-2 group-hover:translate-y-0 scale-90 group-hover:scale-100">
+                            <Maximize2 size={16} className="text-[#c8a96e]/60" />
+                        </div>
+
+                        {/* Subtle Rim Light on Hover */}
+                        <div className="absolute inset-0 border border-[#c8a96e]/0 group-hover:border-[#c8a96e]/10 transition-all duration-700" />
+                    </motion.div>
+                ))}
             </div>
 
             {/* Premium Fullscreen Lookbook */}

@@ -75,24 +75,24 @@ export default function InteractiveHotspots() {
         <section 
             id="hotspots" 
             onMouseMove={handleMouseMove}
-            className="relative min-h-screen w-full bg-[#000000] flex flex-col items-center justify-center overflow-hidden py-20"
+            className="relative min-h-screen w-full bg-[#000000] flex items-center justify-center overflow-hidden py-24"
         >
             {/* ── CINEMATIC SHOWCASE BACKGROUND ── */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <motion.div
                     animate={{ 
-                        scale: 1.02 + mousePosition.x * 0.01,
-                        x: mousePosition.x * 15,
-                        y: mousePosition.y * 15
+                        scale: 1.05 + mousePosition.x * 0.02,
+                        x: mousePosition.x * 20,
+                        y: mousePosition.y * 20
                     }}
                     transition={{ type: "spring", stiffness: 50, damping: 30 }}
-                    className="absolute inset-0 flex items-center justify-center"
+                    className="absolute inset-0"
                 >
                     <img
                         src="/images/british_racing_green.webp"
                         alt="Continental GT 650 Engineering Showcase"
-                        className="w-full h-full object-contain opacity-80"
-                        style={{ filter: "brightness(0.7) contrast(1.1) saturate(0.9)" }}
+                        className="w-full h-full object-cover opacity-80"
+                        style={{ filter: "brightness(0.8) contrast(1.15) saturate(0.9) sharpness(1.4)" }}
                     />
                 </motion.div>
                 
@@ -100,16 +100,25 @@ export default function InteractiveHotspots() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(200,169,110,0.05)_0%,transparent_50%)]" />
                 <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-90" />
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+                
+                {/* Moving Cinematic Light / Smoke */}
+                <motion.div
+                    animate={{ 
+                        x: ["-10%", "10%"],
+                        opacity: [0.05, 0.15, 0.05]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.03)_0%,transparent_60%)] blur-3xl"
+                />
             </div>
 
             {/* ── HEADER ── */}
-            <div className="container mx-auto px-6 xl:px-16 w-full relative z-20 mb-auto">
+            <div className="absolute top-24 left-12 md:left-24 z-20">
                 <motion.div 
                     initial={{ opacity: 0, x: -60 }} 
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
                     viewport={{ once: true }}
-                    className="max-w-md pt-10"
                 >
                     <div className="flex items-center gap-4 mb-4">
                         <motion.div 
@@ -120,7 +129,7 @@ export default function InteractiveHotspots() {
                         />
                         <span className="text-mono-label text-[#c8a96e] tracking-[0.8em] uppercase font-bold text-[10px]">Mechanical Mastery</span>
                     </div>
-                    <h2 className="text-display text-6xl md:text-8xl text-white/95 tracking-tightest leading-none mb-4">
+                    <h2 className="text-display text-7xl md:text-[10rem] text-white/95 tracking-tightest leading-none mb-4">
                         DETAIL.
                     </h2>
                 </motion.div>
