@@ -75,7 +75,7 @@ function AnimatedNumber({ value }: { value: number }) {
 
 export default function PerformanceSpecs() {
     return (
-        <section id="performance" className="relative py-24 md:py-32 bg-[#000000] overflow-hidden">
+        <section id="performance" className="relative py-20 px-6 md:px-16 lg:px-24 bg-[#000000] overflow-hidden">
             {/* Background Texture & Light */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-[50%] h-[50%] bg-[#c8a96e]/5 blur-[120px] rounded-full" />
@@ -87,26 +87,26 @@ export default function PerformanceSpecs() {
                 <h1 className="text-[35vw] font-black text-white leading-none tracking-tighter uppercase">650</h1>
             </div>
 
-            <div className="container relative z-10">
+            <div className="relative z-10 max-w-7xl mx-auto">
                 {/* Header Section */}
-                <div className="max-w-4xl mb-16 md:mb-24">
+                <div className="max-w-3xl mb-8 md:mb-12">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
                         viewport={{ once: true }}
                     >
-                        <span className="text-mono-label text-[#c8a96e] mb-6 block tracking-[0.8em]">Performance Engineering</span>
-                        <h2 className="text-display text-5xl md:text-8xl lg:text-9xl text-white/95 mb-8">
+                        <span className="text-mono-label text-[#c8a96e] mb-4 block tracking-[0.8em]">Performance Engineering</span>
+                        <h2 className="text-display text-5xl md:text-8xl text-white/95 mb-6">
                             PURE <br />
                             <span className="text-white/10">VELOCITY.</span>
                         </h2>
-                        <div className="h-[1px] w-24 bg-[#c8a96e]/40" />
+                        <div className="h-px w-20 bg-gradient-to-r from-[#c8a96e]/40 to-transparent" />
                     </motion.div>
                 </div>
 
                 {/* Specs Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 border border-white/5 mb-24 overflow-hidden rounded-sm">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-0 tracking-tighter mb-12 md:mb-16 border-y border-white/5 bg-white/[0.01]">
                     {SPECS.map((spec, idx) => (
                         <motion.div
                             key={spec.label}
@@ -114,29 +114,29 @@ export default function PerformanceSpecs() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: idx * 0.1, ease: [0.19, 1, 0.22, 1] }}
                             viewport={{ once: true }}
-                            className="group relative p-10 md:p-14 bg-black hover:bg-white/[0.02] transition-colors duration-700"
+                            className="group relative p-10 md:p-14 border-x border-white/5 hover:bg-white/[0.02] transition-colors duration-700"
                         >
-                            <div className="flex items-baseline gap-3 mb-8">
-                                <span className="text-6xl md:text-7xl lg:text-8xl font-black text-white/95 tracking-tighter">
+                            <div className="flex items-baseline gap-2 mb-6">
+                                <span className="text-5xl md:text-7xl font-black text-white/95 tracking-tighter">
                                     <AnimatedNumber value={spec.value} />
                                 </span>
-                                <span className="text-mono-label text-[#c8a96e] !text-[10px] font-bold">
+                                <span className="text-mono-label text-[#c8a96e] !text-[9px] opacity-60">
                                     {spec.unit}
                                 </span>
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-mono-label !text-[9px] text-[#c8a96e] tracking-[0.4em] font-bold">{spec.label.toUpperCase()}</p>
-                                <p className="text-editorial text-xs text-white/30 font-light">{spec.sublabel}</p>
+                            <div className="space-y-1">
+                                <p className="text-mono-label !text-[8px] text-[#c8a96e] tracking-[0.4em] mb-1">{spec.label.toUpperCase()}</p>
+                                <p className="text-editorial text-[10px] text-white/20 font-light">{spec.sublabel}</p>
                             </div>
                             
-                            {/* Premium Highlight */}
-                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#c8a96e]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                            {/* Premium Rim Highlight */}
+                            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#c8a96e]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         </motion.div>
                     ))}
                 </div>
 
-                {/* Detailed Features Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-24 gap-y-16">
+                {/* Detailed Features */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
                     {FEATURES.map((feature, idx) => (
                         <motion.div
                             key={feature.title}
@@ -144,22 +144,29 @@ export default function PerformanceSpecs() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: idx * 0.1, ease: [0.19, 1, 0.22, 1] }}
                             viewport={{ once: true }}
-                            className="group flex flex-col md:flex-row gap-8"
+                            className="group"
                         >
-                            <div className="flex-shrink-0">
-                                <div className="w-12 h-[1px] bg-[#c8a96e]/40 group-hover:w-20 group-hover:bg-[#c8a96e] transition-all duration-700 mt-2" />
-                            </div>
-                            <div className="space-y-4">
-                                <h3 className="text-mono-label text-[11px] text-[#c8a96e] font-bold tracking-[0.4em]">
-                                    {feature.title}
-                                </h3>
-                                <p className="text-editorial text-sm md:text-base text-white/40 font-light leading-relaxed group-hover:text-white/70 transition-colors duration-700">
-                                    {feature.description}
-                                </p>
+                            <div className="flex gap-8">
+                                <div className="flex-shrink-0 mt-1">
+                                    <div className="w-12 h-[1px] bg-[#c8a96e]/20 group-hover:w-16 group-hover:bg-[#c8a96e]/60 transition-all duration-700" />
+                                </div>
+                                <div className="space-y-4">
+                                    <h3 className="text-mono-label text-[10px] text-white/80 group-hover:text-[#c8a96e] transition-colors duration-500 tracking-[0.3em]">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-editorial text-sm md:text-base text-white/30 font-light leading-relaxed group-hover:text-white/50 transition-colors duration-500">
+                                        {feature.description}
+                                    </p>
+                                </div>
                             </div>
                         </motion.div>
                     ))}
                 </div>
+            </div>
+
+            {/* Bottom Branding Section Divider */}
+            <div className="absolute bottom-0 left-0 w-full">
+                <div className="section-divider opacity-20" />
             </div>
         </section>
     );
