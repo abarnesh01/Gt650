@@ -81,7 +81,7 @@ export default function ColorConfigurator() {
             ref={containerRef}
             id="configurator"
             onMouseMove={handleMouseMove}
-            className="relative w-full min-h-screen lg:min-h-[92vh] pt-28 pb-14 overflow-hidden bg-[#050505]"
+            className="relative w-full min-h-screen lg:min-h-[92vh] pt-28 pb-12 overflow-hidden bg-[#050505]"
         >
             {/* ── CINEMATIC LUXURY ENVIRONMENT ── */}
             <div className="absolute inset-0 pointer-events-none">
