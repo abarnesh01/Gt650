@@ -133,6 +133,7 @@ export default function InteractiveHotspots() {
                             <button
                                 key={hs.id}
                                 onClick={() => setActiveHotspot(hs)}
+                                aria-label={`Inspect ${hs.label}`}
                                 className={`absolute z-30 group -translate-x-1/2 -translate-y-1/2 focus:outline-none transition-all duration-500 ${activeHotspot?.id === hs.id ? "scale-125" : "hover:scale-110"}`}
                                 style={{ left: hs.x, top: hs.y }}
                             >

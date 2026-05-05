@@ -59,6 +59,7 @@ export default function Navbar() {
                     {/* Desktop CTA */}
                     <a
                         href="#configurator"
+                        aria-label="Navigate to bike configurator"
                         className="hidden md:inline-block text-[8px] font-mono uppercase tracking-[0.4em] text-[#c8a96e]/60 hover:text-[#c8a96e] transition-all duration-400 border border-[#c8a96e]/15 hover:border-[#c8a96e]/30 px-5 py-2.5 rounded-sm hover:shadow-[0_0_20px_rgba(200,169,110,0.08)]"
                     >
                         Configure
