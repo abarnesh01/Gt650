@@ -123,9 +123,7 @@ export default function Home() {
       </div>
 
       {/* ── SECTION 2: INTERACTIVE DISCOVERY ── */}
-      <div className="relative z-20 -mt-[100vh]">
-         {/* Offset to start hotspots right when hero ends */}
-         <div className="h-screen pointer-events-none" /> 
+      <div className="relative z-20">
          <InteractiveHotspots />
       </div>
 

@@ -158,7 +158,7 @@ export default function SoundEngine() {
     }, [isMuted, BASE_VOLUME, MAX_VOLUME]);
 
     return (
-        <div className="fixed bottom-8 right-8 z-[200]">
+        <div className="fixed bottom-8 right-8 z-[150]">
             <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
