@@ -175,7 +175,11 @@ export default function InteractiveHotspots() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="absolute top-6 right-6">
-                            <button onClick={() => setActiveHotspot(null)} className="text-white/20 hover:text-white transition-colors">
+                            <button 
+                                onClick={() => setActiveHotspot(null)} 
+                                aria-label="Close details"
+                                className="text-white/20 hover:text-white transition-colors"
+                            >
                                 <X size={24} strokeWidth={1.5} />
                             </button>
                         </div>
