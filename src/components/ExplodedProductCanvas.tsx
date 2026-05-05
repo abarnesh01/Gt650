@@ -107,7 +107,18 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = ({ frameCoun
         };
 
         preloadImages();
-        return () => { isMounted = false; };
+        return () => { 
+            isMounted = false;
+            // Clear references to help GC
+            imagesRef.current.forEach((img, i) => {
+                if (img) {
+                    img.onload = null;
+                    img.onerror = null;
+                    imagesRef.current[i] = null;
+                }
+            });
+            imagesRef.current = [];
+        };
     }, [frameCount, basePath]);
 
     // Optimized render function with frame deduplication

@@ -152,7 +152,11 @@ export default function ImageGallery() {
                         className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/98 backdrop-blur-2xl p-6 md:p-20"
                         onClick={() => setSelectedIdx(null)}
                     >
-                        <button className="absolute top-12 right-12 z-[1010] text-white/30 hover:text-white transition-colors">
+                        <button 
+                            onClick={() => setSelectedIdx(null)}
+                            aria-label="Close gallery"
+                            className="absolute top-12 right-12 z-[1010] text-white/30 hover:text-white transition-colors"
+                        >
                             <X size={40} strokeWidth={1} />
                         </button>
 
