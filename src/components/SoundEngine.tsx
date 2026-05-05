@@ -46,7 +46,7 @@ export default function SoundEngine() {
 
             // Load Audio Buffer
             // Using placeholder sound until public/audio/gt650-idle.mp3 is available
-            const response = await fetch("https://www.soundjay.com/transportation/motorcycle-idle-01.mp3");
+            const response = await fetch("/audio/gt650-idle.mp3");
             const arrayBuffer = await response.arrayBuffer();
             bufferRef.current = await audioContextRef.current.decodeAudioData(arrayBuffer);
 

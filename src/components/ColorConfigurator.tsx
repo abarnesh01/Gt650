@@ -64,6 +64,7 @@ const SPECS = [
 ];
 
 export default function ColorConfigurator() {
+    const { isSportMode, isRealMode } = useExperience();
     const [activeColor, setActiveColor] = useState<ColorVariant>(COLORS[0]);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const containerRef = useRef<HTMLDivElement>(null);

@@ -79,6 +79,7 @@ const HOTSPOTS: HotspotData[] = [
 ];
 
 export default function InteractiveHotspots() {
+    const { isSportMode, isRealMode } = useExperience();
     const [activeHotspot, setActiveHotspot] = useState<HotspotData | null>(null);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -137,10 +138,10 @@ export default function InteractiveHotspots() {
                             >
                                 <div className="relative flex items-center justify-center">
                                     {/* Outer Ring */}
-                                    <div className={`w-8 h-8 rounded-full border transition-all duration-700 ${activeHotspot?.id === hs.id ? "border-[#d4af63] bg-[#d4af63]/10 shadow-[0_0_20px_rgba(212,175,99,0.4)]" : "border-[#c6a56c]/40 group-hover:border-[#d4af63]/60"}`} />
+                                    <div className={`w-8 h-8 rounded-full border transition-all duration-700 ${activeHotspot?.id === hs.id ? (isSportMode ? "border-red-500 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.4)]" : "border-[#d4af63] bg-[#d4af63]/10 shadow-[0_0_20px_rgba(212,175,99,0.4)]") : "border-[#c6a56c]/40 group-hover:border-[#d4af63]/60"}`} />
                                     
                                     {/* Inner Dot */}
-                                    <div className={`absolute w-2.5 h-2.5 rounded-full transition-all duration-700 ${activeHotspot?.id === hs.id ? "bg-[#d4af63] scale-125" : "bg-[#d4af63]/60 group-hover:bg-[#d4af63]"}`} />
+                                    <div className={`absolute w-2.5 h-2.5 rounded-full transition-all duration-700 ${activeHotspot?.id === hs.id ? (isSportMode ? "bg-red-500 scale-125" : "bg-[#d4af63] scale-125") : (isSportMode ? "bg-red-500/60 group-hover:bg-red-500" : "bg-[#d4af63]/60 group-hover:bg-[#d4af63]")}`} />
                                     
                                     {/* Pulse Effect for Active */}
                                     {activeHotspot?.id === hs.id && (
