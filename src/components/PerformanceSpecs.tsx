@@ -83,8 +83,8 @@ export default function PerformanceSpecs() {
             </div>
 
             {/* Giant Background Watermark */}
-            <div className="absolute right-[-5%] top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-[0.02] z-0">
-                <h1 className="text-[35vw] font-black text-white leading-none tracking-tighter uppercase">650</h1>
+            <div className="absolute right-[-5%] top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-[0.02] z-0 overflow-hidden">
+                <h1 className="text-[40vw] md:text-[35vw] font-black text-white leading-none tracking-tighter uppercase">650</h1>
             </div>
 
             <div className="relative z-10 w-full">
