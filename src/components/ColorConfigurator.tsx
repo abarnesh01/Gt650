@@ -299,7 +299,7 @@ export default function ColorConfigurator() {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
                         viewport={{ once: true }}
-                        className="w-full max-w-[340px] glass-premium p-8 rounded-sm border-white/5 shadow-[0_50px_120px_rgba(0,0,0,0.9)] group h-auto"
+                        className="w-full max-w-[340px] flex-shrink-0 glass-premium p-8 rounded-sm border-white/5 shadow-[0_50px_120px_rgba(0,0,0,0.9)] group h-fit"
                     >
                         <div className="absolute inset-0 border border-[#c8a96e]/0 group-hover:border-[#c8a96e]/10 transition-colors duration-1000" />
                         

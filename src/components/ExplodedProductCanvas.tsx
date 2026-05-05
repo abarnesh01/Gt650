@@ -166,7 +166,17 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = ({ frameCoun
     }, [isLoaded, renderFrame]);
 
     return (
-        <div className="relative w-full h-full bg-[#050505]">
+        <div className="relative w-full h-full bg-[#050505] overflow-hidden">
+            {/* Initial Shimmer while first frame is loading */}
+            <AnimatePresence>
+                {(!isLoaded && !imagesRef.current[0]) && (
+                    <motion.div 
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 z-10 img-loading" 
+                    />
+                )}
+            </AnimatePresence>
             {/* ═══ PREMIUM LOADING SCREEN ═══ */}
             <AnimatePresence>
                 {!isLoaded && (

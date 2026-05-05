@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import ExplodedProductCanvas from "@/components/ExplodedProductCanvas";
 import ColorConfigurator from "@/components/ColorConfigurator";

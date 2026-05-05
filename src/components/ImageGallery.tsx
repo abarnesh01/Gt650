@@ -84,7 +84,7 @@ export default function ImageGallery() {
     const prev = useCallback(() => setSelectedIdx((prev) => (prev! - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length), []);
 
     return (
-        <section id="gallery" className="relative py-20 px-6 md:px-24 bg-[#000000]">
+        <div id="gallery-content" className="relative bg-[#000000]">
             {/* Header */}
             <div className="mb-16 max-w-5xl">
                 <motion.div
@@ -195,6 +195,6 @@ export default function ImageGallery() {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </section>
+        </div>
     );
 }
