@@ -9,7 +9,7 @@ export default function ExperienceControls() {
     const { isRealMode, setRealMode, isSportMode, setSportMode, isMuted, setMuted } = useExperience();
 
     return (
-        <div className="fixed bottom-8 right-8 z-[100] flex flex-col gap-4">
+        <div className="fixed bottom-8 right-8 z-[200] flex flex-col gap-4">
             {/* Mode Controls Panel */}
             <div className="flex flex-col gap-2 p-2 rounded-full glass-premium border border-white/[0.08]">
                 {/* Real Mode Toggle */}

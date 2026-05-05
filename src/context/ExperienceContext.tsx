@@ -30,6 +30,11 @@ export function ExperienceProvider({ children }: { children: React.ReactNode }) 
     };
 
     useEffect(() => {
+        document.documentElement.setAttribute("data-mode", isSportMode ? "sport" : "default");
+        document.documentElement.setAttribute("data-theme", isRealMode ? "day" : "night");
+    }, [isSportMode, isRealMode]);
+
+    useEffect(() => {
         const checkQuality = () => {
             const isMobile = window.innerWidth < 768;
             setQuality(isMobile ? "mobile" : "desktop");
