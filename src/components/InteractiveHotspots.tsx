@@ -168,7 +168,7 @@ export default function InteractiveHotspots() {
                         exit={isMobile ? { y: "100%" } : { opacity: 0, x: 50 }}
                         transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
                         className={`fixed z-[100] ${isMobile 
-                            ? "bottom-0 left-0 right-0 rounded-t-3xl border-t border-white/10 p-8 pt-10" 
+                            ? "bottom-0 left-0 right-0 rounded-t-3xl border-t border-white/10 p-8 pt-10 max-h-[85vh] overflow-y-auto" 
                             : "top-1/2 right-12 -translate-y-1/2 w-[380px] rounded-lg border border-white/10 p-10 shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
                         } glass-premium bg-black/80 backdrop-blur-3xl`}
                         onClick={(e) => e.stopPropagation()}

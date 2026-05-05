@@ -26,8 +26,8 @@ export default function SoundEngine() {
     const rafId = useRef<number | null>(null);
 
     // Constants
-    const BASE_VOLUME = quality === "mobile" ? 0.05 : 0.1;
-    const MAX_VOLUME = quality === "mobile" ? 0.08 : 0.15;
+    const BASE_VOLUME = quality === "mobile" ? 0.02 : 0.04;
+    const MAX_VOLUME = quality === "mobile" ? 0.05 : 0.08;
     const FADE_TIME = 0.8; // seconds
 
     const initAudio = useCallback(async () => {
@@ -45,7 +45,6 @@ export default function SoundEngine() {
             gainNodeRef.current.gain.setValueAtTime(0, audioContextRef.current.currentTime);
 
             // Load Audio Buffer
-            // Using placeholder sound until public/audio/gt650-idle.mp3 is available
             const response = await fetch("/audio/gt650-idle.mp3");
             const arrayBuffer = await response.arrayBuffer();
             bufferRef.current = await audioContextRef.current.decodeAudioData(arrayBuffer);
