@@ -123,29 +123,29 @@ export default function Home() {
       </div>
 
       {/* ── SECTION 2: INTERACTIVE DISCOVERY ── */}
-      <section id="hotspots" className="relative z-20 py-20">
-         <div className="max-w-[1440px] mx-auto">
+      <section id="hotspots" className="relative z-20 py-20 bg-[#000000]">
+         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
             <InteractiveHotspots />
          </div>
       </section>
 
       {/* ── SECTION 3: PERFORMANCE ── */}
-      <section id="performance" className="relative z-20 py-20">
-         <div className="max-w-[1440px] mx-auto">
+      <section id="performance" className="relative z-20 py-20 bg-[#000000]">
+         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
             <PerformanceSpecs />
          </div>
       </section>
 
       {/* ── SECTION 4: CONFIGURATOR ── */}
-      <section id="configurator" className="relative z-20 py-20">
-         <div className="max-w-[1440px] mx-auto">
+      <section id="configurator" className="relative z-20 py-20 bg-[#050505]">
+         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
             <ColorConfigurator />
          </div>
       </section>
 
       {/* ── SECTION 5: GALLERY ── */}
-      <section id="gallery" className="relative z-20 py-20">
-         <div className="max-w-[1440px] mx-auto">
+      <section id="gallery" className="relative z-20 py-20 bg-[#000000]">
+         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
             <ImageGallery />
          </div>
       </section>

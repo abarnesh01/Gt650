@@ -14,6 +14,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = ({ frameCoun
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [loadError, setLoadError] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [loadingStage, setLoadingStage] = useState("Initializing");
     const lastFrameRef = useRef(-1);
@@ -85,18 +86,23 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = ({ frameCoun
                 });
             };
 
-            // Load in batches to avoid overwhelming the browser
-            for (let i = 0; i < frameCount; i += BATCH_SIZE) {
-                const batch = [];
-                for (let j = i; j < Math.min(i + BATCH_SIZE, frameCount); j++) {
-                    batch.push(loadImage(j));
+            try {
+                // Load in batches to avoid overwhelming the browser
+                for (let i = 0; i < frameCount; i += BATCH_SIZE) {
+                    const batch = [];
+                    for (let j = i; j < Math.min(i + BATCH_SIZE, frameCount); j++) {
+                        batch.push(loadImage(j));
+                    }
+                    await Promise.all(batch);
                 }
-                await Promise.all(batch);
-            }
 
-            if (isMounted) {
-                imagesRef.current = allImages;
-                setIsLoaded(true);
+                if (isMounted) {
+                    imagesRef.current = allImages;
+                    setIsLoaded(true);
+                }
+            } catch (err) {
+                console.error("Hero sequence load failed:", err);
+                if (isMounted) setLoadError(true);
             }
         };
 
@@ -284,9 +290,24 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = ({ frameCoun
                 className="absolute top-0 left-0 w-full h-full object-contain pointer-events-none"
                 style={{ width: "100%", height: "100%" }}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: (isLoaded || (imagesRef.current && imagesRef.current[0])) ? 1 : 0 }}
+                animate={{ opacity: (isLoaded || (imagesRef.current && imagesRef.current[0])) && !loadError ? 1 : 0 }}
                 transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
             />
+
+            {/* Error Fallback */}
+            {loadError && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#050505] p-6 text-center">
+                    <img 
+                        src="/images/british_racing_green.webp" 
+                        alt="Continental GT 650"
+                        className="w-full max-w-4xl h-auto opacity-40 grayscale"
+                    />
+                    <div className="mt-8">
+                        <p className="text-mono-label !text-[10px] text-[#c8a96e] tracking-[0.4em] mb-2 uppercase">Experience Limit</p>
+                        <p className="text-editorial text-sm text-white/30 max-w-xs">The high-definition cinematic sequence could not be initialized. Basic visuals enabled.</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
