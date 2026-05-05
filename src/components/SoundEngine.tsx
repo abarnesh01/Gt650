@@ -162,6 +162,8 @@ export default function SoundEngine() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setMuted(!isMuted)}
+                aria-label={isMuted ? "Unmute engine sound" : "Mute engine sound"}
+                title={isMuted ? "Unmute engine sound" : "Mute engine sound"}
                 className="group relative flex items-center justify-center w-14 h-14 glass-premium rounded-full border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
             >
                 <div className="absolute inset-0 bg-[#c8a96e]/10 opacity-0 group-hover:opacity-100 transition-opacity" />

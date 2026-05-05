@@ -15,6 +15,7 @@ export default function ExperienceControls() {
                 {/* Real Mode Toggle */}
                 <button
                     onClick={() => setRealMode(!isRealMode)}
+                    aria-label={isRealMode ? "Switch to Studio Mode" : "Switch to Real World Mode"}
                     className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 group relative ${isRealMode ? "bg-[#c8a96e] text-black" : "bg-white/[0.03] text-white/40 hover:text-white/80"
                         }`}
                     title={isRealMode ? "Switch to Studio Mode" : "Switch to Real World Mode"}
@@ -30,6 +31,7 @@ export default function ExperienceControls() {
                 {/* Drive Mode Toggle */}
                 <button
                     onClick={() => setSportMode(!isSportMode)}
+                    aria-label={isSportMode ? "Switch to Eco Mode" : "Switch to Sport Mode"}
                     className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 group relative ${isSportMode ? "bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]" : "bg-white/[0.03] text-white/40 hover:text-white/80"
                         }`}
                     title={isSportMode ? "Switch to Eco Mode" : "Switch to Sport Mode"}

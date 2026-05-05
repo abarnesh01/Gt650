@@ -68,6 +68,7 @@ const GalleryImage = memo(({ src, alt, className }: { src: string; alt: string; 
             <img
                 src={src}
                 alt={alt}
+                loading="lazy"
                 className={`${className || ""} transition-all duration-[1.5s] cubic-bezier(0.16, 1, 0.3, 1) ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-110"}`}
                 onLoad={() => setLoaded(true)}
             />
