@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback, memo } from "react";
 import { useScroll, useTransform, useMotionValueEvent, motion, AnimatePresence } from "framer-motion";
+import { useExperience } from "@/context/ExperienceContext";
 
 interface ExplodedProductCanvasProps {
     frameCount: number;
