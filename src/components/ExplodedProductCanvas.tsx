@@ -9,7 +9,8 @@ interface ExplodedProductCanvasProps {
     scrollProgress?: any;
 }
 
-const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ frameCount, basePath, scrollProgress }) => {
+const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = ({ frameCount, basePath, scrollProgress }) => {
+    const { isSportMode, isRealMode } = useExperience(); // Consume context to trigger re-renders
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -30,6 +31,18 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
             const allImages: (HTMLImageElement | null)[] = new Array(frameCount).fill(null);
             let loadedCount = 0;
 
+            // Load FIRST FRAME immediately for visual feedback
+            const firstImg = new Image();
+            firstImg.src = `${basePath}/ezgif-frame-001.png`;
+            firstImg.onload = () => {
+                if (isMounted) {
+                    allImages[0] = firstImg;
+                    imagesRef.current = allImages;
+                    // Trigger an initial render of the first frame
+                    renderFrame(0);
+                }
+            };
+
             // Loading stages for visual feedback
             const stages = [
                 { threshold: 0, label: "Initializing Engine" },
@@ -41,6 +54,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
             ];
 
             const loadImage = (index: number): Promise<void> => {
+                if (index === 0 && allImages[0]) return Promise.resolve(); // Skip first frame if already loaded
                 return new Promise((resolve) => {
                     const img = new Image();
                     const frameNumber = (index + 1).toString().padStart(3, "0");
@@ -98,8 +112,8 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
 
         const imgIndex = Math.min(Math.max(Math.floor(index), 0), images.length - 1);
 
-        // Skip if same frame (avoids redundant draws)
-        if (imgIndex === lastFrameRef.current) return;
+        // Skip if same frame (avoids redundant draws) unless forced
+        if (imgIndex === lastFrameRef.current && imgIndex !== 0) return;
         lastFrameRef.current = imgIndex;
 
         const img = images[imgIndex];
@@ -119,7 +133,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
 
     // Update on scroll
     useMotionValueEvent(frameIndexValue, "change", (latest) => {
-        if (isLoaded) renderFrame(latest);
+        if (isLoaded || imagesRef.current[0]) renderFrame(latest);
     });
 
     // Handle Resize & Initial Render
@@ -133,7 +147,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
             canvas.width = window.innerWidth * dpr;
             canvas.height = window.innerHeight * dpr;
 
-            if (isLoaded) {
+            if (isLoaded || imagesRef.current[0]) {
                 lastFrameRef.current = -1; // Force re-render
                 renderFrame(frameIndexValue.get());
             }
@@ -154,7 +168,7 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#000000]"
+                        className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#000000]/80 backdrop-blur-sm"
                     >
                         {/* Subtle vignette */}
                         <div
@@ -270,12 +284,12 @@ const ExplodedProductCanvas: React.FC<ExplodedProductCanvasProps> = memo(({ fram
                 className="absolute top-0 left-0 w-full h-full object-contain pointer-events-none"
                 style={{ width: "100%", height: "100%" }}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: isLoaded ? 1 : 0 }}
+                animate={{ opacity: (isLoaded || (imagesRef.current && imagesRef.current[0])) ? 1 : 0 }}
                 transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
             />
         </div>
     );
-});
+};
 
 ExplodedProductCanvas.displayName = "ExplodedProductCanvas";
 
