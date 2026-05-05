@@ -252,6 +252,7 @@ export default function ColorConfigurator() {
                                 <button
                                     key={color.id}
                                     onClick={() => setActiveColor(color)}
+                                    aria-label={`Select ${color.name} color`}
                                     className="relative group outline-none"
                                 >
                                     <motion.div

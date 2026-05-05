@@ -67,9 +67,11 @@ export default function CinematicIntro({ onComplete }: { onComplete: () => void 
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="fixed inset-0 z-[500] bg-black flex items-center justify-center cursor-pointer select-none"
+                    className="fixed inset-0 z-[500] bg-black flex items-center justify-center cursor-pointer select-none focus:outline-none"
                     onClick={skip}
                     tabIndex={0}
+                    role="button"
+                    aria-label="Skip cinematic introduction"
                 >
                     {/* ── Subtle Film Grain ── */}
                     <div
