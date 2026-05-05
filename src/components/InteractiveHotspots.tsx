@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useExperience } from "@/context/ExperienceContext";
 import { X, Info, Settings, Shield, Zap, Activity, Cpu } from "lucide-react";
 
 interface HotspotData {
