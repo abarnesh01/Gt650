@@ -78,11 +78,11 @@ export default function ColorConfigurator() {
     };
 
     return (
-        <section
+        <div
             ref={containerRef}
-            id="configurator"
+            id="configurator-content"
             onMouseMove={handleMouseMove}
-            className="relative w-full min-h-screen lg:min-h-[92vh] pt-28 pb-12 overflow-hidden bg-[#050505]"
+            className="relative w-full overflow-hidden bg-[#050505]"
         >
             {/* ── CINEMATIC LUXURY ENVIRONMENT ── */}
             <div className="absolute inset-0 pointer-events-none">
@@ -338,6 +338,6 @@ export default function ColorConfigurator() {
                     </motion.div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

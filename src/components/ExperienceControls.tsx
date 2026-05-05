@@ -9,7 +9,7 @@ export default function ExperienceControls() {
     const { isRealMode, setRealMode, isSportMode, setSportMode, isMuted, setMuted } = useExperience();
 
     return (
-        <div className="fixed bottom-8 right-8 z-[200] flex flex-col gap-4">
+        <div className="fixed bottom-24 right-8 z-[200] flex flex-col gap-4">
             {/* Mode Controls Panel */}
             <div className="flex flex-col gap-2 p-2 rounded-full glass-premium border border-white/[0.08]">
                 {/* Real Mode Toggle */}
@@ -38,20 +38,6 @@ export default function ExperienceControls() {
                     <div className="absolute right-full mr-4 px-3 py-1.5 rounded-sm bg-black/80 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
                         <span className="text-[8px] font-mono uppercase tracking-[0.3em] text-white">
                             {isSportMode ? "Sport Mode" : "Eco Mode"}
-                        </span>
-                    </div>
-                </button>
-
-                {/* Sound Toggle */}
-                <button
-                    onClick={() => setMuted(!isMuted)}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 group relative ${!isMuted ? "bg-white/10 text-white" : "bg-white/[0.03] text-white/20"
-                        }`}
-                >
-                    {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                    <div className="absolute right-full mr-4 px-3 py-1.5 rounded-sm bg-black/80 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                        <span className="text-[8px] font-mono uppercase tracking-[0.3em] text-white">
-                            {isMuted ? "Muted" : "Sound On"}
                         </span>
                     </div>
                 </button>

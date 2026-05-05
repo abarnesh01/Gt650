@@ -91,9 +91,9 @@ export default function InteractiveHotspots() {
     }, []);
 
     return (
-        <section 
-            id="hotspots" 
-            className="relative w-full min-h-screen lg:min-h-[100vh] pt-28 pb-14 overflow-hidden bg-[#000000]"
+        <div 
+            id="hotspots-content" 
+            className="relative w-full overflow-hidden bg-[#000000]"
             onClick={() => setActiveHotspot(null)}
         >
             {/* ── CINEMATIC BACKGROUND ── */}
@@ -220,6 +220,6 @@ export default function InteractiveHotspots() {
                     <span className="text-mono-label !text-[8px] tracking-[1em] text-[#c8a96e] font-bold uppercase">Tap components to inspect</span>
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

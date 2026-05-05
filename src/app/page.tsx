@@ -123,23 +123,31 @@ export default function Home() {
       </div>
 
       {/* ── SECTION 2: INTERACTIVE DISCOVERY ── */}
-      <div className="relative z-20">
-         <InteractiveHotspots />
-      </div>
+      <section id="hotspots" className="relative z-20 py-20">
+         <div className="max-w-[1440px] mx-auto">
+            <InteractiveHotspots />
+         </div>
+      </section>
 
       {/* ── SECTION 3: PERFORMANCE ── */}
-      <section className="relative z-20">
-        <PerformanceSpecs />
+      <section id="performance" className="relative z-20 py-20">
+         <div className="max-w-[1440px] mx-auto">
+            <PerformanceSpecs />
+         </div>
       </section>
 
       {/* ── SECTION 4: CONFIGURATOR ── */}
-      <section className="relative z-20">
-        <ColorConfigurator />
+      <section id="configurator" className="relative z-20 py-20">
+         <div className="max-w-[1440px] mx-auto">
+            <ColorConfigurator />
+         </div>
       </section>
 
       {/* ── SECTION 5: GALLERY ── */}
-      <section className="relative z-20">
-        <ImageGallery />
+      <section id="gallery" className="relative z-20 py-20">
+         <div className="max-w-[1440px] mx-auto">
+            <ImageGallery />
+         </div>
       </section>
 
       {/* ── SECTION 6: FOOTER / CTA ── */}
